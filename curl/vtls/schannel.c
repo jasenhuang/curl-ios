@@ -289,7 +289,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
   CURLcode result;
   bool doread;
 
-  doread = (connssl->connecting_state != ssl_connect_2_writing) ? TRUE : FALSE;
+  doread = (connssl->connecting_state != ssl_connect_2_writing) ? true : false;
 
   infof(data, "schannel: SSL/TLS connection with %s port %hu (step 2/3)\n",
         conn->host.name, conn->remote_port);
@@ -456,7 +456,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
                   inbuf[1].cbBuffer, inbuf[1].cbBuffer);
         connssl->encdata_offset = inbuf[1].cbBuffer;
         if(sspi_status == SEC_I_CONTINUE_NEEDED) {
-          doread = FALSE;
+          doread = false;
           continue;
         }
       }
@@ -534,7 +534,7 @@ schannel_connect_step3(struct connectdata *conn, int sockindex)
     if(old_cred != connssl->cred) {
       infof(data, "schannel: old credential handle is stale, removing\n");
       Curl_ssl_delsessionid(conn, (void *)old_cred);
-      incache = FALSE;
+      incache = false;
     }
   }
 
@@ -546,7 +546,7 @@ schannel_connect_step3(struct connectdata *conn, int sockindex)
       return result;
     }
     else {
-      connssl->cred->cached = TRUE;
+      connssl->cred->cached = true;
       infof(data, "schannel: stored credential handle in session cache\n");
     }
   }
@@ -569,13 +569,13 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
 
   /* check if the connection has already been established */
   if(ssl_connection_complete == connssl->state) {
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
   if(ssl_connect_1 == connssl->connecting_state) {
     /* check out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -593,7 +593,7 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -618,7 +618,7 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
       }
       else if(0 == what) {
         if(nonblocking) {
-          *done = FALSE;
+          *done = false;
           return CURLE_OK;
         }
         else {
@@ -656,10 +656,10 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
     connssl->state = ssl_connection_complete;
     conn->recv[sockindex] = schannel_recv;
     conn->send[sockindex] = schannel_send;
-    *done = TRUE;
+    *done = true;
   }
   else
-    *done = FALSE;
+    *done = false;
 
   /* reset our connection state machine */
   connssl->connecting_state = ssl_connect_1;
@@ -756,7 +756,7 @@ schannel_send(struct connectdata *conn, int sockindex,
 
       this_write = 0;
 
-      timeleft = Curl_timeleft(conn->data, NULL, FALSE);
+      timeleft = Curl_timeleft(conn->data, NULL, false);
       if(timeleft < 0) {
         /* we already got the timeout */
         failf(conn->data, "schannel: timed out sending data "
@@ -825,7 +825,7 @@ schannel_recv(struct connectdata *conn, int sockindex,
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
   unsigned char *reallocated_buffer;
   size_t reallocated_length;
-  bool done = FALSE;
+  bool done = false;
   SecBuffer inbuf[4];
   SecBufferDesc inbuf_desc;
   SECURITY_STATUS sspi_status = SEC_E_OK;
@@ -999,7 +999,7 @@ schannel_recv(struct connectdata *conn, int sockindex,
       infof(data, "schannel: renegotiating SSL/TLS connection\n");
       connssl->state = ssl_connection_negotiating;
       connssl->connecting_state = ssl_connect_2_writing;
-      result = schannel_connect_common(conn, sockindex, FALSE, &done);
+      result = schannel_connect_common(conn, sockindex, false, &done);
       if(result)
         *err = result;
       else {
@@ -1055,16 +1055,16 @@ CURLcode
 Curl_schannel_connect_nonblocking(struct connectdata *conn, int sockindex,
                                   bool *done)
 {
-  return schannel_connect_common(conn, sockindex, TRUE, done);
+  return schannel_connect_common(conn, sockindex, true, done);
 }
 
 CURLcode
 Curl_schannel_connect(struct connectdata *conn, int sockindex)
 {
   CURLcode result;
-  bool done = FALSE;
+  bool done = false;
 
-  result = schannel_connect_common(conn, sockindex, FALSE, &done);
+  result = schannel_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 
@@ -1079,9 +1079,9 @@ bool Curl_schannel_data_pending(const struct connectdata *conn, int sockindex)
 
   if(connssl->use) /* SSL/TLS is in use */
     return (connssl->encdata_offset > 0 ||
-            connssl->decdata_offset > 0 ) ? TRUE : FALSE;
+            connssl->decdata_offset > 0 ) ? true : false;
   else
-    return FALSE;
+    return false;
 }
 
 void Curl_schannel_close(struct connectdata *conn, int sockindex)
@@ -1211,7 +1211,7 @@ void Curl_schannel_session_free(void *ptr)
       Curl_safefree(cred);
     }
     else {
-      cred->cached = FALSE;
+      cred->cached = false;
     }
   }
 }

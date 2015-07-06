@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "curl.h"
 
 @interface curlTests : XCTestCase
 
 @end
+
+
 
 @implementation curlTests
 
@@ -27,7 +30,12 @@
 
 - (void)testExample {
     // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+    //XCTAssert(YES, @"Pass");
+    CURL *handler = curl_easy_init();
+    curl_easy_setopt(handler, CURLOPT_URL, "http://www.baidu.com");
+    curl_easy_setopt(handler, CURLOPT_VERBOSE, 1L);
+    curl_easy_perform(handler);
+    curl_easy_cleanup(handler);
 }
 
 - (void)testPerformanceExample {

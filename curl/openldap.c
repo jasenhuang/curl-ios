@@ -248,7 +248,7 @@ static CURLcode ldap_connecting(struct connectdata *conn, bool *done)
       Sockbuf *sb;
       ldap_get_option(li->ld, LDAP_OPT_SOCKBUF, &sb);
       ber_sockbuf_add_io(sb, &ldapsb_tls, LBER_SBIOD_LEVEL_TRANSPORT, conn);
-      li->sslinst = TRUE;
+      li->sslinst = true;
       li->recv = conn->recv[FIRSTSOCKET];
       li->send = conn->send[FIRSTSOCKET];
     }
@@ -276,7 +276,7 @@ retry:
                         NULL, NULL, &li->msgid);
     if(rc)
       return CURLE_LDAP_CANNOT_BIND;
-    li->didbind = TRUE;
+    li->didbind = true;
     if(tvp)
       return CURLE_OK;
   }
@@ -308,7 +308,7 @@ retry:
       }
       proto = LDAP_VERSION2;
       ldap_set_option(li->ld, LDAP_OPT_PROTOCOL_VERSION, &proto);
-      li->didbind = FALSE;
+      li->didbind = false;
       goto retry;
     }
   }
@@ -324,7 +324,7 @@ retry:
   if(info)
     ldap_memfree(info);
   conn->recv[FIRSTSOCKET] = ldap_recv;
-  *done = TRUE;
+  *done = true;
 
   return CURLE_OK;
 }
@@ -385,8 +385,8 @@ static CURLcode ldap_do(struct connectdata *conn, bool *done)
     return CURLE_OUT_OF_MEMORY;
   lr->msgid = msgid;
   data->req.protop = lr;
-  Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, NULL, -1, NULL);
-  *done = TRUE;
+  Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, NULL, -1, NULL);
+  *done = true;
   return CURLE_OK;
 }
 

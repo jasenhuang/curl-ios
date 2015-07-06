@@ -173,7 +173,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
                                                  NULL,
                                                  gss_token,
                                                  &gss_send_token,
-                                                 TRUE,
+                                                 true,
                                                  &gss_ret_flags);
 
     if(gss_token != GSS_C_NO_BUFFER)
@@ -366,7 +366,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
    *
    * The token is produced by encapsulating an octet containing the
    * required protection level using gss_seal()/gss_wrap() with conf_req
-   * set to FALSE.  The token is verified using gss_unseal()/
+   * set to false.  The token is verified using gss_unseal()/
    * gss_unwrap().
    *
    */

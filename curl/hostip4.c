@@ -59,15 +59,15 @@
 #ifdef CURLRES_IPV4 /* plain IPv4 code coming up */
 /*
  * Curl_ipvalid() checks what CURL_IPRESOLVE_* requirements that might've
- * been set and returns TRUE if they are OK.
+ * been set and returns true if they are OK.
  */
 bool Curl_ipvalid(struct connectdata *conn)
 {
   if(conn->ip_version == CURL_IPRESOLVE_V6)
     /* An IPv6 address was requested and we can't get/use one */
-    return FALSE;
+    return false;
 
-  return TRUE; /* OK, proceed */
+  return true; /* OK, proceed */
 }
 
 #ifdef CURLRES_SYNCH

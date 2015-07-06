@@ -120,10 +120,10 @@ static bool tailmatch(const char *cooke_domain, const char *hostname)
   size_t hostname_len = strlen(hostname);
 
   if(hostname_len < cookie_domain_len)
-    return FALSE;
+    return false;
 
   if(!Curl_raw_equal(cooke_domain, hostname+hostname_len-cookie_domain_len))
-    return FALSE;
+    return false;
 
   /* A lead char of cookie_domain is not '.'.
      RFC6265 4.1.2.3. The Domain Attribute says:
@@ -133,10 +133,10 @@ static bool tailmatch(const char *cooke_domain, const char *hostname)
        www.corp.example.com.
    */
   if(hostname_len == cookie_domain_len)
-    return TRUE;
+    return true;
   if('.' == *(hostname + hostname_len - cookie_domain_len - 1))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 /*
@@ -149,18 +149,18 @@ static bool pathmatch(const char* cookie_path, const char* request_uri)
   size_t uri_path_len;
   char* uri_path = NULL;
   char* pos;
-  bool ret = FALSE;
+  bool ret = false;
 
   /* cookie_path must not have last '/' separator. ex: /sample */
   cookie_path_len = strlen(cookie_path);
   if(1 == cookie_path_len) {
     /* cookie_path must be '/' */
-    return TRUE;
+    return true;
   }
 
   uri_path = strdup(request_uri);
   if(!uri_path)
-    return FALSE;
+    return false;
   pos = strchr(uri_path, '?');
   if(pos)
     *pos = 0x0;
@@ -170,7 +170,7 @@ static bool pathmatch(const char* cookie_path, const char* request_uri)
     free(uri_path);
     uri_path = strdup("/");
     if(!uri_path)
-      return FALSE;
+      return false;
   }
 
   /* here, RFC6265 5.1.4 says
@@ -185,29 +185,29 @@ static bool pathmatch(const char* cookie_path, const char* request_uri)
   uri_path_len = strlen(uri_path);
 
   if(uri_path_len < cookie_path_len) {
-    ret = FALSE;
+    ret = false;
     goto pathmatched;
   }
 
   /* not using checkprefix() because matching should be case-sensitive */
   if(strncmp(cookie_path, uri_path, cookie_path_len)) {
-    ret = FALSE;
+    ret = false;
     goto pathmatched;
   }
 
   /* The cookie-path and the uri-path are identical. */
   if(cookie_path_len == uri_path_len) {
-    ret = TRUE;
+    ret = true;
     goto pathmatched;
   }
 
   /* here, cookie_path_len < url_path_len */
   if(uri_path[cookie_path_len] == '/') {
-    ret = TRUE;
+    ret = true;
     goto pathmatched;
   }
 
-  ret = FALSE;
+  ret = false;
 
 pathmatched:
   free(uri_path);
@@ -338,10 +338,10 @@ static bool isip(const char *domain)
 #endif
     ) {
     /* domain name given as IP address */
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 /****************************************************************************
@@ -364,7 +364,7 @@ Curl_cookie_add(struct SessionHandle *data,
                    with data being NULL. Such as infof() and similar */
 
                 struct CookieInfo *c,
-                bool httpheader, /* TRUE if HTTP header-style line */
+                bool httpheader, /* true if HTTP header-style line */
                 char *lineptr,   /* first character of the line */
                 const char *domain, /* default domain */
                 const char *path)   /* full path used when this cookie is set,
@@ -376,8 +376,8 @@ Curl_cookie_add(struct SessionHandle *data,
   struct Cookie *co;
   struct Cookie *lastc=NULL;
   time_t now = time(NULL);
-  bool replace_old = FALSE;
-  bool badcookie = FALSE; /* cookies are good by default. mmmmm yummy */
+  bool replace_old = false;
+  bool badcookie = false; /* cookies are good by default. mmmmm yummy */
 
 #ifdef CURL_DISABLE_VERBOSE_STRINGS
   (void)data;
@@ -416,7 +416,7 @@ Curl_cookie_add(struct SessionHandle *data,
            headers that have the same string property set more than once,
            and then we use the last one. */
         const char *whatptr;
-        bool done = FALSE;
+        bool done = false;
         bool sep;
         size_t len=strlen(what);
         const char *endofn = &ptr[ strlen(name) ];
@@ -426,7 +426,7 @@ Curl_cookie_add(struct SessionHandle *data,
           endofn++;
 
         /* name ends with a '=' ? */
-        sep = (*endofn == '=')?TRUE:FALSE;
+        sep = (*endofn == '=')?true:false;
 
         /* Strip off trailing whitespace from the 'what' */
         while(len && ISBLANK(what[len-1])) {
@@ -442,26 +442,26 @@ Curl_cookie_add(struct SessionHandle *data,
         if(!len) {
           /* this was a "<name>=" with no content, and we must allow
              'secure' and 'httponly' specified this weirdly */
-          done = TRUE;
+          done = true;
           if(Curl_raw_equal("secure", name))
-            co->secure = TRUE;
+            co->secure = true;
           else if(Curl_raw_equal("httponly", name))
-            co->httponly = TRUE;
+            co->httponly = true;
           else if(sep)
             /* there was a '=' so we're not done parsing this field */
-            done = FALSE;
+            done = false;
         }
         if(done)
           ;
         else if(Curl_raw_equal("path", name)) {
           strstore(&co->path, whatptr);
           if(!co->path) {
-            badcookie = TRUE; /* out of memory bad */
+            badcookie = true; /* out of memory bad */
             break;
           }
           co->spath = sanitize_cookie_path(co->path);
           if(!co->spath) {
-            badcookie = TRUE; /* out of memory bad */
+            badcookie = true; /* out of memory bad */
             break;
           }
         }
@@ -487,18 +487,18 @@ Curl_cookie_add(struct SessionHandle *data,
              || (!is_ip && tailmatch(whatptr, domain))) {
             strstore(&co->domain, whatptr);
             if(!co->domain) {
-              badcookie = TRUE;
+              badcookie = true;
               break;
             }
             if(!is_ip)
-              co->tailmatch=TRUE; /* we always do that if the domain name was
+              co->tailmatch= true; /* we always do that if the domain name was
                                      given */
           }
           else {
             /* we did not get a tailmatch and then the attempted set domain
                is not a domain to which the current host belongs. Mark as
                bad. */
-            badcookie=TRUE;
+            badcookie= true;
             infof(data, "skipped cookie with bad tailmatch domain: %s\n",
                   whatptr);
           }
@@ -506,7 +506,7 @@ Curl_cookie_add(struct SessionHandle *data,
         else if(Curl_raw_equal("version", name)) {
           strstore(&co->version, whatptr);
           if(!co->version) {
-            badcookie = TRUE;
+            badcookie = true;
             break;
           }
         }
@@ -522,14 +522,14 @@ Curl_cookie_add(struct SessionHandle *data,
           */
           strstore(&co->maxage, whatptr);
           if(!co->maxage) {
-            badcookie = TRUE;
+            badcookie = true;
             break;
           }
         }
         else if(Curl_raw_equal("expires", name)) {
           strstore(&co->expirestr, whatptr);
           if(!co->expirestr) {
-            badcookie = TRUE;
+            badcookie = true;
             break;
           }
         }
@@ -537,7 +537,7 @@ Curl_cookie_add(struct SessionHandle *data,
           co->name = strdup(name);
           co->value = strdup(whatptr);
           if(!co->name || !co->value) {
-            badcookie = TRUE;
+            badcookie = true;
             break;
           }
         }
@@ -595,7 +595,7 @@ Curl_cookie_add(struct SessionHandle *data,
         /* no domain was given in the header line, set the default */
         co->domain=strdup(domain);
         if(!co->domain)
-          badcookie = TRUE;
+          badcookie = true;
       }
     }
 
@@ -620,10 +620,10 @@ Curl_cookie_add(struct SessionHandle *data,
           co->path[pathlen]=0; /* zero terminate */
           co->spath = sanitize_cookie_path(co->path);
           if(!co->spath)
-            badcookie = TRUE; /* out of memory bad */
+            badcookie = true; /* out of memory bad */
         }
         else
-          badcookie = TRUE;
+          badcookie = true;
       }
     }
 
@@ -654,7 +654,7 @@ Curl_cookie_add(struct SessionHandle *data,
     */
     if(strncmp(lineptr, "#HttpOnly_", 10) == 0) {
       lineptr += 10;
-      co->httponly = TRUE;
+      co->httponly = true;
     }
 
     if(lineptr[0]=='#') {
@@ -682,34 +682,34 @@ Curl_cookie_add(struct SessionHandle *data,
           ptr++;
         co->domain = strdup(ptr);
         if(!co->domain)
-          badcookie = TRUE;
+          badcookie = true;
         break;
       case 1:
         /* This field got its explanation on the 23rd of May 2001 by
            Andrés García:
 
-           flag: A TRUE/FALSE value indicating if all machines within a given
+           flag: A true/false value indicating if all machines within a given
            domain can access the variable. This value is set automatically by
            the browser, depending on the value you set for the domain.
 
            As far as I can see, it is set to true when the cookie says
            .domain.com and to false when the domain is complete www.domain.com
         */
-        co->tailmatch = Curl_raw_equal(ptr, "TRUE")?TRUE:FALSE;
+        co->tailmatch = Curl_raw_equal(ptr, "true")?true:false;
         break;
       case 2:
         /* It turns out, that sometimes the file format allows the path
            field to remain not filled in, we try to detect this and work
            around it! Andrés García made us aware of this... */
-        if(strcmp("TRUE", ptr) && strcmp("FALSE", ptr)) {
+        if(strcmp("true", ptr) && strcmp("false", ptr)) {
           /* only if the path doesn't look like a boolean option! */
           co->path = strdup(ptr);
           if(!co->path)
-            badcookie = TRUE;
+            badcookie = true;
           else {
             co->spath = sanitize_cookie_path(co->path);
             if(!co->spath) {
-              badcookie = TRUE; /* out of memory bad */
+              badcookie = true; /* out of memory bad */
             }
           }
           break;
@@ -717,14 +717,14 @@ Curl_cookie_add(struct SessionHandle *data,
         /* this doesn't look like a path, make one up! */
         co->path = strdup("/");
         if(!co->path)
-          badcookie = TRUE;
+          badcookie = true;
         co->spath = strdup("/");
         if(!co->spath)
-          badcookie = TRUE;
+          badcookie = true;
         fields++; /* add a field and fall down to secure */
         /* FALLTHROUGH */
       case 3:
-        co->secure = Curl_raw_equal(ptr, "TRUE")?TRUE:FALSE;
+        co->secure = Curl_raw_equal(ptr, "true")?true:false;
         break;
       case 4:
         co->expires = curlx_strtoofft(ptr, NULL, 10);
@@ -732,12 +732,12 @@ Curl_cookie_add(struct SessionHandle *data,
       case 5:
         co->name = strdup(ptr);
         if(!co->name)
-          badcookie = TRUE;
+          badcookie = true;
         break;
       case 6:
         co->value = strdup(ptr);
         if(!co->value)
-          badcookie = TRUE;
+          badcookie = true;
         break;
       }
     }
@@ -745,14 +745,14 @@ Curl_cookie_add(struct SessionHandle *data,
       /* we got a cookie with blank contents, fix it */
       co->value = strdup("");
       if(!co->value)
-        badcookie = TRUE;
+        badcookie = true;
       else
         fields++;
     }
 
     if(!badcookie && (7 != fields))
       /* we did not find the sufficient number of fields */
-      badcookie = TRUE;
+      badcookie = true;
 
     if(badcookie) {
       freecookie(co);
@@ -778,7 +778,7 @@ Curl_cookie_add(struct SessionHandle *data,
   remove_expired(c);
 
   clist = c->cookies;
-  replace_old = FALSE;
+  replace_old = false;
   while(clist) {
     if(Curl_raw_equal(clist->name, co->name)) {
       /* the names are identical */
@@ -786,25 +786,25 @@ Curl_cookie_add(struct SessionHandle *data,
       if(clist->domain && co->domain) {
         if(Curl_raw_equal(clist->domain, co->domain))
           /* The domains are identical */
-          replace_old=TRUE;
+          replace_old = true;
       }
       else if(!clist->domain && !co->domain)
-        replace_old = TRUE;
+        replace_old = true;
 
       if(replace_old) {
         /* the domains were identical */
 
         if(clist->spath && co->spath) {
           if(Curl_raw_equal(clist->spath, co->spath)) {
-            replace_old = TRUE;
+            replace_old = true;
           }
           else
-            replace_old = FALSE;
+            replace_old = false;
         }
         else if(!clist->spath && !co->spath)
-          replace_old = TRUE;
+          replace_old = true;
         else
-          replace_old = FALSE;
+          replace_old = false;
 
       }
 
@@ -876,7 +876,7 @@ Curl_cookie_add(struct SessionHandle *data,
  * Inits a cookie struct to read data from a local file. This is always
  * called before any cookies are set. File may be NULL.
  *
- * If 'newsession' is TRUE, discard all "session cookies" on read from file.
+ * If 'newsession' is true, discard all "session cookies" on read from file.
  *
  * Returns NULL on out of memory. Invalid cookies are ignored.
  ****************************************************************************/
@@ -887,7 +887,7 @@ struct CookieInfo *Curl_cookie_init(struct SessionHandle *data,
 {
   struct CookieInfo *c;
   FILE *fp = NULL;
-  bool fromfile=TRUE;
+  bool fromfile= true;
   char *line = NULL;
 
   if(NULL == inc) {
@@ -903,11 +903,11 @@ struct CookieInfo *Curl_cookie_init(struct SessionHandle *data,
     /* we got an already existing one, use that */
     c = inc;
   }
-  c->running = FALSE; /* this is not running, this is init */
+  c->running = false; /* this is not running, this is init */
 
   if(file && strequal(file, "-")) {
     fp = stdin;
-    fromfile=FALSE;
+    fromfile=false;
   }
   else if(file && !*file) {
     /* points to a "" string */
@@ -929,11 +929,11 @@ struct CookieInfo *Curl_cookie_init(struct SessionHandle *data,
       if(checkprefix("Set-Cookie:", line)) {
         /* This is a cookie line, get it! */
         lineptr=&line[11];
-        headerline=TRUE;
+        headerline= true;
       }
       else {
         lineptr=line;
-        headerline=FALSE;
+        headerline=false;
       }
       while(*lineptr && ISBLANK(*lineptr))
         lineptr++;
@@ -946,7 +946,7 @@ struct CookieInfo *Curl_cookie_init(struct SessionHandle *data,
       fclose(fp);
   }
 
-  c->running = TRUE;          /* now, we're running */
+  c->running = true;          /* now, we're running */
 
   return c;
 
@@ -1029,7 +1029,7 @@ struct Cookie *Curl_cookie_getlist(struct CookieInfo *c,
        date AND that if the cookie requires we're secure we must only
        continue if we are! */
     if((!co->expires || (co->expires > now)) &&
-       (co->secure?secure:TRUE)) {
+       (co->secure?secure:true)) {
 
       /* now check if the domain is correct */
       if(!co->domain ||
@@ -1118,7 +1118,7 @@ struct Cookie *Curl_cookie_getlist(struct CookieInfo *c,
 void Curl_cookie_clearall(struct CookieInfo *cookies)
 {
   if(cookies) {
-    Curl_cookie_freelist(cookies->cookies, TRUE);
+    Curl_cookie_freelist(cookies->cookies, true);
     cookies->cookies = NULL;
     cookies->numcookies = 0;
   }
@@ -1199,7 +1199,7 @@ void Curl_cookie_cleanup(struct CookieInfo *c)
 {
   if(c) {
     free(c->filename);
-    Curl_cookie_freelist(c->cookies, TRUE);
+    Curl_cookie_freelist(c->cookies, true);
     free(c); /* free the base struct as well */
   }
 }
@@ -1226,9 +1226,9 @@ static char *get_netscape_format(const struct Cookie *co)
        tailmatching. This is Mozilla-style. */
     (co->tailmatch && co->domain && co->domain[0] != '.')? ".":"",
     co->domain?co->domain:"unknown",
-    co->tailmatch?"TRUE":"FALSE",
+    co->tailmatch?"true":"false",
     co->path?co->path:"/",
-    co->secure?"TRUE":"FALSE",
+    co->secure?"true":"false",
     co->expires,
     co->name,
     co->value?co->value:"");
@@ -1246,7 +1246,7 @@ static int cookie_output(struct CookieInfo *c, const char *dumphere)
 {
   struct Cookie *co;
   FILE *out;
-  bool use_stdout=FALSE;
+  bool use_stdout=false;
 
   if((NULL == c) || (0 == c->numcookies))
     /* If there are no known cookies, we don't write or even create any
@@ -1259,7 +1259,7 @@ static int cookie_output(struct CookieInfo *c, const char *dumphere)
   if(strequal("-", dumphere)) {
     /* use stdout */
     out = stdout;
-    use_stdout=TRUE;
+    use_stdout= true;
   }
   else {
     out = fopen(dumphere, "w");

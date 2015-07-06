@@ -199,7 +199,7 @@ static CURLcode tftp_set_timeouts(tftp_state_data_t *state)
 {
   time_t maxtime, timeout;
   long timeout_ms;
-  bool start = (state->state == TFTP_STATE_START) ? TRUE : FALSE;
+  bool start = (state->state == TFTP_STATE_START) ? true : false;
 
   time(&state->start_time);
 
@@ -1012,12 +1012,12 @@ static CURLcode tftp_connect(struct connectdata *conn, bool *done)
             Curl_strerror(conn, SOCKERRNO));
       return CURLE_COULDNT_CONNECT;
     }
-    conn->bits.bound = TRUE;
+    conn->bits.bound = true;
   }
 
   Curl_pgrsStartNow(conn->data);
 
-  *done = TRUE;
+  *done = true;
 
   return CURLE_OK;
 }
@@ -1201,7 +1201,7 @@ static CURLcode tftp_multi_statemach(struct connectdata *conn, bool *done)
   tftp_state_data_t     *state = (tftp_state_data_t *)conn->proto.tftpc;
   long                  timeout_ms = tftp_state_timeout(conn, &event);
 
-  *done = FALSE;
+  *done = false;
 
   if(timeout_ms <= 0) {
     failf(data, "TFTP response timeout");
@@ -1211,10 +1211,10 @@ static CURLcode tftp_multi_statemach(struct connectdata *conn, bool *done)
     result = tftp_state_machine(state, event);
     if(result)
       return result;
-    *done = (state->state == TFTP_STATE_FIN) ? TRUE : FALSE;
+    *done = (state->state == TFTP_STATE_FIN) ? true : false;
     if(*done)
       /* Tell curl we're done */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
   }
   else {
     /* no timeouts to handle, check our socket */
@@ -1233,10 +1233,10 @@ static CURLcode tftp_multi_statemach(struct connectdata *conn, bool *done)
       result = tftp_state_machine(state, state->event);
       if(result)
         return result;
-      *done = (state->state == TFTP_STATE_FIN) ? TRUE : FALSE;
+      *done = (state->state == TFTP_STATE_FIN) ? true : false;
       if(*done)
         /* Tell curl we're done */
-        Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+        Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
     }
     /* if rc == 0, then select() timed out */
   }
@@ -1283,7 +1283,7 @@ static CURLcode tftp_perform(struct connectdata *conn, bool *dophase_done)
   CURLcode              result = CURLE_OK;
   tftp_state_data_t     *state = (tftp_state_data_t *)conn->proto.tftpc;
 
-  *dophase_done = FALSE;
+  *dophase_done = false;
 
   result = tftp_state_machine(state, TFTP_EVENT_INIT);
 
@@ -1314,7 +1314,7 @@ static CURLcode tftp_do(struct connectdata *conn, bool *done)
   tftp_state_data_t *state;
   CURLcode result;
 
-  *done = FALSE;
+  *done = false;
 
   if(!conn->proto.tftpc) {
     result = tftp_connect(conn, done);
@@ -1359,14 +1359,14 @@ static CURLcode tftp_setup_connection(struct connectdata * conn)
     switch (command) {
     case 'A': /* ASCII mode */
     case 'N': /* NETASCII mode */
-      data->set.prefer_ascii = TRUE;
+      data->set.prefer_ascii = true;
       break;
 
     case 'O': /* octet mode */
     case 'I': /* binary mode */
     default:
       /* switch off ASCII */
-      data->set.prefer_ascii = FALSE;
+      data->set.prefer_ascii = false;
       break;
     }
   }

@@ -2086,13 +2086,13 @@ darwinssl_connect_common(struct connectdata *conn,
 
   /* check if the connection has already been established */
   if(ssl_connection_complete == connssl->state) {
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
   if(ssl_connect_1==connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2110,7 +2110,7 @@ darwinssl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2135,7 +2135,7 @@ darwinssl_connect_common(struct connectdata *conn,
       }
       else if(0 == what) {
         if(nonblocking) {
-          *done = FALSE;
+          *done = false;
           return CURLE_OK;
         }
         else {
@@ -2173,10 +2173,10 @@ darwinssl_connect_common(struct connectdata *conn,
     connssl->state = ssl_connection_complete;
     conn->recv[sockindex] = darwinssl_recv;
     conn->send[sockindex] = darwinssl_send;
-    *done = TRUE;
+    *done = true;
   }
   else
-    *done = FALSE;
+    *done = false;
 
   /* Reset our connect state machine */
   connssl->connecting_state = ssl_connect_1;
@@ -2189,7 +2189,7 @@ Curl_darwinssl_connect_nonblocking(struct connectdata *conn,
                                    int sockindex,
                                    bool *done)
 {
-  return darwinssl_connect_common(conn, sockindex, TRUE, done);
+  return darwinssl_connect_common(conn, sockindex, true, done);
 }
 
 CURLcode
@@ -2199,7 +2199,7 @@ Curl_darwinssl_connect(struct connectdata *conn,
   CURLcode result;
   bool done = false;
 
-  result = darwinssl_connect_common(conn, sockindex, FALSE, &done);
+  result = darwinssl_connect_common(conn, sockindex, false, &done);
 
   if(result)
     return result;
@@ -2370,9 +2370,9 @@ void Curl_darwinssl_md5sum(unsigned char *tmp, /* input */
 bool Curl_darwinssl_false_start(void) {
 #if CURL_BUILD_MAC_10_9 || CURL_BUILD_IOS_7
   if(SSLSetSessionOption != NULL)
-    return TRUE;
+    return true;
 #endif
-  return FALSE;
+  return false;
 }
 
 static ssize_t darwinssl_send(struct connectdata *conn,

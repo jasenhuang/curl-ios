@@ -118,13 +118,13 @@ CURLcode Curl_output_digest(struct connectdata *conn,
     passwdp = "";
 
 #if defined(USE_WINDOWS_SSPI)
-  have_chlg = digest->input_token ? TRUE : FALSE;
+  have_chlg = digest->input_token ? true : false;
 #else
-  have_chlg = digest->nonce ? TRUE : FALSE;
+  have_chlg = digest->nonce ? true : false;
 #endif
 
   if(!have_chlg) {
-    authp->done = FALSE;
+    authp->done = false;
     return CURLE_OK;
   }
 
@@ -165,7 +165,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
   if(!*allocuserpwd)
     return CURLE_OUT_OF_MEMORY;
 
-  authp->done = TRUE;
+  authp->done = true;
 
   return CURLE_OK;
 }

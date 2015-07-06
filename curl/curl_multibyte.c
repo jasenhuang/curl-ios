@@ -68,7 +68,7 @@ char *Curl_convert_wchar_to_UTF8(const wchar_t *str_w)
       str_utf8 = malloc(str_utf8_len * sizeof(wchar_t));
       if(str_utf8) {
         if(WideCharToMultiByte(CP_UTF8, 0, str_w, -1, str_utf8, str_utf8_len,
-                               NULL, FALSE) == 0) {
+                               NULL, false) == 0) {
           free(str_utf8);
           return NULL;
         }

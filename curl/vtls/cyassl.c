@@ -105,7 +105,7 @@ cyassl_connect_step1(struct connectdata *conn,
   void* ssl_sessionid = NULL;
   curl_socket_t sockfd = conn->sock[sockindex];
 #ifdef HAVE_SNI
-  bool sni = FALSE;
+  bool sni = false;
 #define use_sni(x)  sni = (x)
 #else
 #define use_sni(x)  Curl_nop_stmt
@@ -126,23 +126,23 @@ cyassl_connect_step1(struct connectdata *conn,
           "TLS 1.0 is used exclusively\n");
     req_method = TLSv1_client_method();
 #endif
-    use_sni(TRUE);
+    use_sni(true);
     break;
   case CURL_SSLVERSION_TLSv1_0:
     req_method = TLSv1_client_method();
-    use_sni(TRUE);
+    use_sni(true);
     break;
   case CURL_SSLVERSION_TLSv1_1:
     req_method = TLSv1_1_client_method();
-    use_sni(TRUE);
+    use_sni(true);
     break;
   case CURL_SSLVERSION_TLSv1_2:
     req_method = TLSv1_2_client_method();
-    use_sni(TRUE);
+    use_sni(true);
     break;
   case CURL_SSLVERSION_SSLv3:
     req_method = SSLv3_client_method();
-    use_sni(FALSE);
+    use_sni(false);
     break;
   case CURL_SSLVERSION_SSLv2:
     failf(data, "CyaSSL does not support SSLv2");
@@ -430,7 +430,7 @@ cyassl_connect_step3(struct connectdata *conn,
     if(old_ssl_sessionid != our_ssl_sessionid) {
       infof(data, "old SSL session ID is stale, removing\n");
       Curl_ssl_delsessionid(conn, old_ssl_sessionid);
-      incache = FALSE;
+      incache = false;
     }
   }
 
@@ -555,9 +555,9 @@ int Curl_cyassl_init(void)
 bool Curl_cyassl_data_pending(const struct connectdata* conn, int connindex)
 {
   if(conn->ssl[connindex].handle)   /* SSL is in use */
-    return (0 != SSL_pending(conn->ssl[connindex].handle)) ? TRUE : FALSE;
+    return (0 != SSL_pending(conn->ssl[connindex].handle)) ? true : false;
   else
-    return FALSE;
+    return false;
 }
 
 
@@ -593,13 +593,13 @@ cyassl_connect_common(struct connectdata *conn,
 
   /* check if the connection has already been established */
   if(ssl_connection_complete == connssl->state) {
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
   if(ssl_connect_1==connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -617,7 +617,7 @@ cyassl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -642,7 +642,7 @@ cyassl_connect_common(struct connectdata *conn,
       }
       else if(0 == what) {
         if(nonblocking) {
-          *done = FALSE;
+          *done = false;
           return CURLE_OK;
         }
         else {
@@ -679,10 +679,10 @@ cyassl_connect_common(struct connectdata *conn,
     connssl->state = ssl_connection_complete;
     conn->recv[sockindex] = cyassl_recv;
     conn->send[sockindex] = cyassl_send;
-    *done = TRUE;
+    *done = true;
   }
   else
-    *done = FALSE;
+    *done = false;
 
   /* Reset our connect state machine */
   connssl->connecting_state = ssl_connect_1;
@@ -696,7 +696,7 @@ Curl_cyassl_connect_nonblocking(struct connectdata *conn,
                                 int sockindex,
                                 bool *done)
 {
-  return cyassl_connect_common(conn, sockindex, TRUE, done);
+  return cyassl_connect_common(conn, sockindex, true, done);
 }
 
 
@@ -705,9 +705,9 @@ Curl_cyassl_connect(struct connectdata *conn,
                     int sockindex)
 {
   CURLcode result;
-  bool done = FALSE;
+  bool done = false;
 
-  result = cyassl_connect_common(conn, sockindex, FALSE, &done);
+  result = cyassl_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 

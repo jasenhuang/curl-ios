@@ -62,7 +62,7 @@ bool Curl_pipeline_penalized(struct SessionHandle *data,
                              struct connectdata *conn)
 {
   if(data) {
-    bool penalized = FALSE;
+    bool penalized = false;
     curl_off_t penalty_size =
       Curl_multi_content_length_penalty_size(data->multi);
     curl_off_t chunk_penalty_size =
@@ -76,20 +76,20 @@ bool Curl_pipeline_penalized(struct SessionHandle *data,
       recv_size = recv_handle->req.size;
 
       if(penalty_size > 0 && recv_size > penalty_size)
-        penalized = TRUE;
+        penalized = true;
     }
 
     if(chunk_penalty_size > 0 &&
        (curl_off_t)conn->chunk.datasize > chunk_penalty_size)
-      penalized = TRUE;
+      penalized = true;
 
     infof(data, "Conn: %ld (%p) Receive pipe weight: (%"
           CURL_FORMAT_CURL_OFF_T "/%zu), penalized: %s\n",
           conn->connection_id, (void *)conn, recv_size,
-          conn->chunk.datasize, penalized?"TRUE":"FALSE");
+          conn->chunk.datasize, penalized?"true":"false");
     return penalized;
   }
-  return FALSE;
+  return false;
 }
 
 CURLcode Curl_add_handle_to_pipeline(struct SessionHandle *handle,
@@ -105,7 +105,7 @@ CURLcode Curl_add_handle_to_pipeline(struct SessionHandle *handle,
 
   if(pipeline == conn->send_pipe && sendhead != conn->send_pipe->head) {
     /* this is a new one as head, expire it */
-    conn->writechannel_inuse = FALSE; /* not in use yet */
+    conn->writechannel_inuse = false; /* not in use yet */
     Curl_expire(conn->send_pipe->head->ptr, 1);
   }
 
@@ -136,7 +136,7 @@ void Curl_move_handle_from_send_to_recv_pipe(struct SessionHandle *handle,
       if(conn->send_pipe->head) {
         /* Since there's a new easy handle at the start of the send pipeline,
            set its timeout value to 1ms to make it trigger instantly */
-        conn->writechannel_inuse = FALSE; /* not used now */
+        conn->writechannel_inuse = false; /* not used now */
 #ifdef DEBUGBUILD
         infof(conn->data, "%p is at send pipe head B!\n",
               (void *)conn->send_pipe->head->ptr);
@@ -173,13 +173,13 @@ bool Curl_pipeline_site_blacklisted(struct SessionHandle *handle,
            site->port == conn->remote_port) {
           infof(handle, "Site %s:%d is pipeline blacklisted\n",
                 conn->host.name, conn->remote_port);
-          return TRUE;
+          return true;
         }
         curr = curr->next;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
@@ -264,7 +264,7 @@ bool Curl_pipeline_server_blacklisted(struct SessionHandle *handle,
         if(Curl_raw_nequal(bl_server_name, server_name,
                            strlen(bl_server_name))) {
           infof(handle, "Server %s is blacklisted\n", server_name);
-          return TRUE;
+          return true;
         }
         curr = curr->next;
       }
@@ -272,7 +272,7 @@ bool Curl_pipeline_server_blacklisted(struct SessionHandle *handle,
 
     DEBUGF(infof(handle, "Server %s is not blacklisted\n", server_name));
   }
-  return FALSE;
+  return false;
 }
 
 CURLMcode Curl_pipeline_set_server_blacklist(char **servers,

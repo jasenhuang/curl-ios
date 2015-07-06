@@ -55,7 +55,7 @@ void
 Curl_setup_transfer (struct connectdata *data,
                int sockindex,           /* socket index to read from or -1 */
                curl_off_t size,         /* -1 if unknown at this point */
-               bool getheader,          /* TRUE if header parsing is wanted */
+               bool getheader,          /* true if header parsing is wanted */
                curl_off_t *bytecountp,  /* return number of bytes read */
                int writesockindex,      /* socket index to write to, it may
                                            very well be the same we read from.

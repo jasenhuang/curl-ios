@@ -122,17 +122,17 @@ struct ftp_conn {
   int dirdepth;  /* number of entries used in the 'dirs' array */
   int diralloc;  /* number of entries allocated for the 'dirs' array */
   char *file;    /* decoded file */
-  bool dont_check;  /* Set to TRUE to prevent the final (post-transfer)
+  bool dont_check;  /* Set to true to prevent the final (post-transfer)
                        file size and 226/250 status check. It should still
                        read the line, just ignore the result. */
   bool ctl_valid;   /* Tells Curl_ftp_quit() whether or not to do anything. If
                        the connection has timed out or been closed, this
-                       should be FALSE when it gets to Curl_ftp_quit() */
+                       should be false when it gets to Curl_ftp_quit() */
   bool cwddone;     /* if it has been determined that the proper CWD combo
                        already has been done */
-  bool cwdfail;     /* set TRUE if a CWD command fails, as then we must prevent
+  bool cwdfail;     /* set true if a CWD command fails, as then we must prevent
                        caching the current directory */
-  bool wait_data_conn; /* this is set TRUE if data connection is waited */
+  bool wait_data_conn; /* this is set true if data connection is waited */
   char *prevpath;   /* conn->path from the previous transfer */
   char transfertype; /* set by ftp_transfertype for use by Curl_client_write()a
                         and others (A/I or zero) */

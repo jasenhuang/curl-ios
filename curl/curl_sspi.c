@@ -66,7 +66,7 @@ PSecurityFunctionTable s_pSecFn = NULL;
  */
 CURLcode Curl_sspi_global_init(void)
 {
-  bool securityDll = FALSE;
+  bool securityDll = false;
   INITSECURITYINTERFACE_FN pInitSecurityInterface;
 
   /* If security interface is not yet initialized try to do this */
@@ -91,7 +91,7 @@ CURLcode Curl_sspi_global_init(void)
     /* Verify the major version number == 4 and platform id == WIN_NT */
     if(osver.dwMajorVersion == majorVersion &&
        osver.dwPlatformId == platformId)
-      securityDll = TRUE;
+      securityDll = true;
 #else
     ULONGLONG majorVersionMask;
     ULONGLONG platformIdMask;
@@ -107,7 +107,7 @@ CURLcode Curl_sspi_global_init(void)
     /* Verify the major version number == 4 and platform id == WIN_NT */
     if(VerifyVersionInfo(&osver, VER_MAJORVERSION, majorVersionMask) &&
        VerifyVersionInfo(&osver, VER_PLATFORMID, platformIdMask))
-      securityDll = TRUE;
+      securityDll = true;
 #endif
 
     /* Load SSPI dll into the address space of the calling process */

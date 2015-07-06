@@ -91,16 +91,16 @@ int Curl_resolv_timeout(struct connectdata *conn, const char *hostname,
 
 #ifdef CURLRES_IPV6
 /*
- * Curl_ipv6works() returns TRUE if IPv6 seems to work.
+ * Curl_ipv6works() returns true if IPv6 seems to work.
  */
 bool Curl_ipv6works(void);
 #else
-#define Curl_ipv6works() FALSE
+#define Curl_ipv6works() false
 #endif
 
 /*
  * Curl_ipvalid() checks what CURL_IPRESOLVE_* requirements that might've
- * been set and returns TRUE if they are OK.
+ * been set and returns true if they are OK.
  */
 bool Curl_ipvalid(struct connectdata *conn);
 

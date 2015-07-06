@@ -139,7 +139,7 @@ void Curl_pp_init(struct pingpong *pp)
   struct connectdata *conn = pp->conn;
   pp->nread_resp = 0;
   pp->linestart_resp = conn->data->state.buffer;
-  pp->pending_resp = TRUE;
+  pp->pending_resp = true;
   pp->response = Curl_tvnow(); /* start response time-out now! */
 }
 
@@ -267,7 +267,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
                           size_t *size) /* size of the response */
 {
   ssize_t perline; /* count bytes per line */
-  bool keepon=TRUE;
+  bool keepon= true;
   ssize_t gotbytes;
   char *ptr;
   struct connectdata *conn = pp->conn;
@@ -322,13 +322,13 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
 
       if(result)
         /* Set outer result variable to this error. */
-        keepon = FALSE;
+        keepon = false;
     }
 
     if(!keepon)
       ;
     else if(gotbytes <= 0) {
-      keepon = FALSE;
+      keepon = false;
       result = CURLE_RECV_ERROR;
       failf(data, "response reading failed");
     }
@@ -338,7 +338,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
        * line */
       ssize_t i;
       ssize_t clipamount = 0;
-      bool restart = FALSE;
+      bool restart = false;
 
       data->req.headerbytecount += (long)gotbytes;
 
@@ -373,7 +373,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
             size_t n = ptr - pp->linestart_resp;
             memmove(buf, pp->linestart_resp, n);
             buf[n]=0; /* zero terminate */
-            keepon=FALSE;
+            keepon=false;
             pp->linestart_resp = ptr+1; /* advance pointer */
             i++; /* skip this before getting out */
 
@@ -392,7 +392,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
            to store the rest of the data to be checked on the next invoke as
            it may actually contain another end of response already! */
         clipamount = gotbytes - i;
-        restart = TRUE;
+        restart = true;
         DEBUGF(infof(data, "Curl_pp_readresp_ %d bytes of trailing "
                      "server response left\n",
                      (int)clipamount));
@@ -405,7 +405,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
              away the rest. */
           infof(data, "Excessive server response line length received, "
                 "%zd bytes. Stripping\n", gotbytes);
-          restart = TRUE;
+          restart = true;
 
           /* we keep 40 bytes since all our pingpong protocols are only
              interested in the first piece */
@@ -416,11 +416,11 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
              trailing data to take care of, so we put any such part in the
              "cache", clear the buffer to make space and restart. */
           clipamount = perline;
-          restart = TRUE;
+          restart = true;
         }
       }
       else if(i == gotbytes)
-        restart = TRUE;
+        restart = true;
 
       if(clipamount) {
         pp->cache_size = clipamount;
@@ -442,7 +442,7 @@ CURLcode Curl_pp_readresp(curl_socket_t sockfd,
 
   } /* while there's buffer left and loop is requested */
 
-  pp->pending_resp = FALSE;
+  pp->pending_resp = false;
 
   return result;
 }
@@ -501,7 +501,7 @@ CURLcode Curl_pp_disconnect(struct pingpong *pp)
 bool Curl_pp_moredata(struct pingpong *pp)
 {
   return (!pp->sendleft && pp->cache && pp->nread_resp < pp->cache_size) ?
-         TRUE : FALSE;
+         true : false;
 }
 
 #endif

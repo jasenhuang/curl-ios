@@ -211,12 +211,12 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   SECItem *param = NULL;
   PK11Context *ctx = NULL;
   int out_len;                                /* not used, required by NSS */
-  bool rv = FALSE;
+  bool rv = false;
 
   /* use internal slot for DES encryption (requires NSS to be initialized) */
   slot = PK11_GetInternalKeySlot();
   if(!slot)
-    return FALSE;
+    return false;
 
   /* Expand the 56-bit key to 64-bits */
   extend_key_56_to_64(key_56, key);
@@ -244,16 +244,16 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   if(SECSuccess == PK11_CipherOp(ctx, out, &out_len, /* outbuflen */ 8,
                                  (unsigned char *)in, /* inbuflen */ 8)
       && SECSuccess == PK11_Finalize(ctx))
-    rv = /* all OK */ TRUE;
+    rv = /* all OK */ true;
 
 fail:
   /* cleanup */
   if(ctx)
-    PK11_DestroyContext(ctx, PR_TRUE);
+    PK11_DestroyContext(ctx, PR_true);
   if(symkey)
     PK11_FreeSymKey(symkey);
   if(param)
-    SECITEM_FreeItem(param, PR_TRUE);
+    SECITEM_FreeItem(param, PR_true);
   PK11_FreeSlot(slot);
   return rv;
 }
@@ -302,7 +302,7 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   /* Perform the encryption */
   _CIPHER((_SPCPTR *) &out, &ctl, (_SPCPTR *) &in);
 
-  return TRUE;
+  return true;
 }
 
 #elif defined(USE_WIN32_CRYPTO)
@@ -322,7 +322,7 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   /* Acquire the crypto provider */
   if(!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_FULL,
                           CRYPT_VERIFYCONTEXT))
-    return FALSE;
+    return false;
 
   /* Setup the key blob structure */
   memset(&blob, 0, sizeof(blob));
@@ -341,18 +341,18 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   if(!CryptImportKey(hprov, (BYTE *) &blob, sizeof(blob), 0, 0, &hkey)) {
     CryptReleaseContext(hprov, 0);
 
-    return FALSE;
+    return false;
   }
 
   memcpy(out, in, 8);
 
   /* Perform the encryption */
-  CryptEncrypt(hkey, 0, FALSE, 0, out, &len, len);
+  CryptEncrypt(hkey, 0, false, 0, out, &len, len);
 
   CryptDestroyKey(hkey);
   CryptReleaseContext(hprov, 0);
 
-  return TRUE;
+  return true;
 }
 
 #endif /* defined(USE_WIN32_CRYPTO) */

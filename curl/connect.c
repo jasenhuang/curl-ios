@@ -173,7 +173,7 @@ singleipconnect(struct connectdata *conn,
  * Curl_pgrsTime(..., TIMER_STARTSINGLE);
  *
  * If 'nowp' is non-NULL, it points to the current time.
- * 'duringconnect' is FALSE if not during a connect, as then of course the
+ * 'duringconnect' is false if not during a connect, as then of course the
  * connect timeout is not taken into account!
  *
  * @unittest: 1303
@@ -268,18 +268,18 @@ static CURLcode bindlocal(struct connectdata *conn,
   if(dev && (strlen(dev)<255) ) {
     char myhost[256] = "";
     int done = 0; /* -1 for error, 1 for address found */
-    bool is_interface = FALSE;
-    bool is_host = FALSE;
+    bool is_interface = false;
+    bool is_host = false;
     static const char *if_prefix = "if!";
     static const char *host_prefix = "host!";
 
     if(strncmp(if_prefix, dev, strlen(if_prefix)) == 0) {
       dev += strlen(if_prefix);
-      is_interface = TRUE;
+      is_interface = true;
     }
     else if(strncmp(host_prefix, dev, strlen(host_prefix)) == 0) {
       dev += strlen(host_prefix);
-      is_host = TRUE;
+      is_host = true;
     }
 
     /* interface */
@@ -297,7 +297,7 @@ static CURLcode bindlocal(struct connectdata *conn,
           /* Signal the caller to try another address family if available */
           return CURLE_UNSUPPORTED_PROTOCOL;
         case IF2IP_FOUND:
-          is_interface = TRUE;
+          is_interface = true;
           /*
            * We now have the numerical IP address in the 'myhost' buffer
            */
@@ -441,7 +441,7 @@ static CURLcode bindlocal(struct connectdata *conn,
         return CURLE_INTERFACE_FAILED;
       }
       infof(data, "Local port: %hu\n", port);
-      conn->bits.bound = TRUE;
+      conn->bits.bound = true;
       return CURLE_OK;
     }
 
@@ -468,11 +468,11 @@ static CURLcode bindlocal(struct connectdata *conn,
 }
 
 /*
- * verifyconnect() returns TRUE if the connect really has happened.
+ * verifyconnect() returns true if the connect really has happened.
  */
 static bool verifyconnect(curl_socket_t sockfd, int *error)
 {
-  bool rc = TRUE;
+  bool rc = true;
 #ifdef SO_ERROR
   int err = 0;
   curl_socklen_t errSize = sizeof(err);
@@ -497,7 +497,7 @@ static bool verifyconnect(curl_socket_t sockfd, int *error)
 #ifdef _WIN32_WCE
   Sleep(0);
 #else
-  SleepEx(0, FALSE);
+  SleepEx(0, false);
 #endif
 
 #endif
@@ -520,10 +520,10 @@ static bool verifyconnect(curl_socket_t sockfd, int *error)
 #endif
   if((0 == err) || (EISCONN == err))
     /* we are connected, awesome! */
-    rc = TRUE;
+    rc = true;
   else
     /* This wasn't a successful connect */
-    rc = FALSE;
+    rc = false;
   if(error)
     *error = err;
 #else
@@ -534,7 +534,7 @@ static bool verifyconnect(curl_socket_t sockfd, int *error)
   return rc;
 }
 
-/* Used within the multi interface. Try next IP address, return TRUE if no
+/* Used within the multi interface. Try next IP address, return true if no
    more address exists or error */
 static CURLcode trynextip(struct connectdata *conn,
                           int sockindex,
@@ -624,7 +624,7 @@ static bool getaddressinfo(struct sockaddr* sa, char* addr,
                         addr, MAX_IPADR_LEN)) {
         us_port = ntohs(si->sin_port);
         *port = us_port;
-        return TRUE;
+        return true;
       }
       break;
 #ifdef ENABLE_IPV6
@@ -634,7 +634,7 @@ static bool getaddressinfo(struct sockaddr* sa, char* addr,
                         addr, MAX_IPADR_LEN)) {
         us_port = ntohs(si6->sin6_port);
         *port = us_port;
-        return TRUE;
+        return true;
       }
       break;
 #endif
@@ -643,7 +643,7 @@ static bool getaddressinfo(struct sockaddr* sa, char* addr,
       su = (struct sockaddr_un*)sa;
       snprintf(addr, MAX_IPADR_LEN, "%s", su->sun_path);
       *port = 0;
-      return TRUE;
+      return true;
 #endif
     default:
       break;
@@ -652,7 +652,7 @@ static bool getaddressinfo(struct sockaddr* sa, char* addr,
   addr[0] = '\0';
   *port = 0;
 
-  return FALSE;
+  return false;
 }
 
 /* retrieves the start/end point information of a socket of an established
@@ -729,18 +729,18 @@ CURLcode Curl_is_connected(struct connectdata *conn,
 
   DEBUGASSERT(sockindex >= FIRSTSOCKET && sockindex <= SECONDARYSOCKET);
 
-  *connected = FALSE; /* a very negative world view is best */
+  *connected = false; /* a very negative world view is best */
 
   if(conn->bits.tcpconnect[sockindex]) {
     /* we are connected already! */
-    *connected = TRUE;
+    *connected = true;
     return CURLE_OK;
   }
 
   now = Curl_tvnow();
 
   /* figure out how long time we have left to connect */
-  allow = Curl_timeleft(data, &now, TRUE);
+  allow = Curl_timeleft(data, &now, true);
 
   if(allow < 0) {
     /* time-out, bail out, go home */
@@ -796,9 +796,9 @@ CURLcode Curl_is_connected(struct connectdata *conn,
         if(result)
           return result;
 
-        conn->bits.tcpconnect[sockindex] = TRUE;
+        conn->bits.tcpconnect[sockindex] = true;
 
-        *connected = TRUE;
+        *connected = true;
         if(sockindex == FIRSTSOCKET)
           Curl_pgrsTime(data, TIMER_CONNECT); /* connect done */
         Curl_updateconninfo(conn, conn->sock[sockindex]);
@@ -992,7 +992,7 @@ static CURLcode singleipconnect(struct connectdata *conn,
   struct Curl_sockaddr_ex addr;
   int rc;
   int error = 0;
-  bool isconnected = FALSE;
+  bool isconnected = false;
   struct SessionHandle *data = conn->data;
   curl_socket_t sockfd;
   CURLcode result;
@@ -1044,7 +1044,7 @@ static CURLcode singleipconnect(struct connectdata *conn,
                                CURLSOCKTYPE_IPCXN);
 
     if(error == CURL_SOCKOPT_ALREADY_CONNECTED)
-      isconnected = TRUE;
+      isconnected = true;
     else if(error) {
       Curl_closesocket(conn, sockfd); /* close the socket and bail out */
       return CURLE_ABORTED_BY_CALLBACK;
@@ -1071,7 +1071,7 @@ static CURLcode singleipconnect(struct connectdata *conn,
   }
 
   /* set socket non-blocking */
-  (void)curlx_nonblock(sockfd, TRUE);
+  (void)curlx_nonblock(sockfd, true);
 
   conn->connecttime = Curl_tvnow();
   if(conn->num_addr > 1)
@@ -1089,7 +1089,7 @@ static CURLcode singleipconnect(struct connectdata *conn,
   }
 
 #ifdef ENABLE_IPV6
-  conn->bits.ipv6 = (addr.family == AF_INET6)?TRUE:FALSE;
+  conn->bits.ipv6 = (addr.family == AF_INET6)?true:false;
 #endif
 
   if(-1 == rc) {
@@ -1139,7 +1139,7 @@ CURLcode Curl_connecthost(struct connectdata *conn,  /* context */
   struct timeval before = Curl_tvnow();
   CURLcode result = CURLE_COULDNT_CONNECT;
 
-  long timeout_ms = Curl_timeleft(data, &before, TRUE);
+  long timeout_ms = Curl_timeleft(data, &before, true);
 
   if(timeout_ms < 0) {
     /* a precaution, no need to continue if time already is up */
@@ -1183,7 +1183,7 @@ static int conn_is_conn(struct connectdata *conn, void *param)
 {
   struct connfind *f = (struct connfind *)param;
   if(conn == f->tofind) {
-    f->found = TRUE;
+    f->found = true;
     return 1;
   }
   return 0;
@@ -1211,7 +1211,7 @@ curl_socket_t Curl_getconnectinfo(struct SessionHandle *data,
     struct connectdata *c = data->state.lastconnect;
     struct connfind find;
     find.tofind = data->state.lastconnect;
-    find.found = FALSE;
+    find.found = false;
 
     Curl_conncache_foreach(data->multi_easy?
                            data->multi_easy->conn_cache:
@@ -1265,7 +1265,7 @@ int Curl_closesocket(struct connectdata *conn,
       /* if this socket matches the second socket, and that was created with
          accept, then we MUST NOT call the callback but clear the accepted
          status */
-      conn->sock_accepted[SECONDARYSOCKET] = FALSE;
+      conn->sock_accepted[SECONDARYSOCKET] = false;
     else {
       Curl_multi_closed(conn, sock);
       return conn->fclosesocket(conn->closesocket_client, sock);

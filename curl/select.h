@@ -107,7 +107,7 @@ int tpf_select_libcurl(int maxfds, fd_set* reads, fd_set* writes,
     SET_SOCKERRNO(EINVAL); \
     return -1; \
   } \
-} WHILE_FALSE
+} WHILE_false
 #endif
 
 #endif /* HEADER_CURL_SELECT_H */

@@ -101,17 +101,17 @@ CURLcode Curl_addrinfo_callback(struct connectdata *conn,
 
   conn->async.dns = dns;
 
- /* Set async.done TRUE last in this function since it may be used multi-
-    threaded and once this is TRUE the other thread may read fields from the
+ /* Set async.done true last in this function since it may be used multi-
+    threaded and once this is true the other thread may read fields from the
     async struct */
-  conn->async.done = TRUE;
+  conn->async.done = true;
 
   /* IPv4: The input hostent struct will be freed by ares when we return from
      this function */
   return result;
 }
 
-/* Call this function after Curl_connect() has returned async=TRUE and
+/* Call this function after Curl_connect() has returned async= true and
    then a successful name resolve has been received.
 
    Note: this function disconnects and frees the conn data in case of
@@ -131,7 +131,7 @@ CURLcode Curl_async_resolved(struct connectdata *conn,
   if(result)
     /* We're not allowed to return failure with memory left allocated
        in the connectdata struct, free those here */
-    Curl_disconnect(conn, FALSE); /* close the connection */
+    Curl_disconnect(conn, false); /* close the connection */
 
   return result;
 }

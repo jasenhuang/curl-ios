@@ -246,10 +246,10 @@ static CURLcode file_connect(struct connectdata *conn, bool *done)
   file->fd = fd;
   if(!data->set.upload && (fd == -1)) {
     failf(data, "Couldn't open file %s", data->state.path);
-    file_done(conn, CURLE_FILE_COULDNT_READ_FILE, FALSE);
+    file_done(conn, CURLE_FILE_COULDNT_READ_FILE, false);
     return CURLE_FILE_COULDNT_READ_FILE;
   }
-  *done = TRUE;
+  *done = true;
 
   return CURLE_OK;
 }
@@ -428,7 +428,7 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
                           Windows version to have a different struct without
                           having to redefine the simple word 'stat' */
   curl_off_t expected_size=0;
-  bool fstated=FALSE;
+  bool fstated=false;
   ssize_t nread;
   struct SessionHandle *data = conn->data;
   char *buf = data->state.buffer;
@@ -437,7 +437,7 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
   struct timeval now = Curl_tvnow();
   struct FILEPROTO *file;
 
-  *done = TRUE; /* unconditionally */
+  *done = true; /* unconditionally */
 
   Curl_initinfo(data);
   Curl_pgrsStartNow(data);
@@ -456,12 +456,12 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
     expected_size = statbuf.st_size;
     /* and store the modification time */
     data->info.filetime = (long)statbuf.st_mtime;
-    fstated = TRUE;
+    fstated = true;
   }
 
   if(fstated && !data->state.range && data->set.timecondition) {
     if(!Curl_meets_timecondition(data, (time_t)data->info.filetime)) {
-      *done = TRUE;
+      *done = true;
       return CURLE_OK;
     }
   }

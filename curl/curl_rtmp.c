@@ -212,7 +212,7 @@ static CURLcode rtmp_connect(struct connectdata *conn, bool *done)
      !(r->Link.protocol & RTMP_FEATURE_HTTP))
     r->Link.lFlags |= RTMP_LF_BUFX;
 
-  (void)curlx_nonblock(r->m_sb.sb_socket, FALSE);
+  (void)curlx_nonblock(r->m_sb.sb_socket, false);
   setsockopt(r->m_sb.sb_socket, SOL_SOCKET, SO_RCVTIMEO,
              (char *)&tv, sizeof(tv));
 
@@ -222,7 +222,7 @@ static CURLcode rtmp_connect(struct connectdata *conn, bool *done)
   /* Clients must send a periodic BytesReceived report to the server */
   r->m_bSendCounter = true;
 
-  *done = TRUE;
+  *done = true;
   conn->recv[FIRSTSOCKET] = rtmp_recv;
   conn->send[FIRSTSOCKET] = rtmp_send;
   return CURLE_OK;
@@ -237,11 +237,11 @@ static CURLcode rtmp_do(struct connectdata *conn, bool *done)
 
   if(conn->data->set.upload) {
     Curl_pgrsSetUploadSize(conn->data, conn->data->state.infilesize);
-    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
+    Curl_setup_transfer(conn, -1, -1, false, NULL, FIRSTSOCKET, NULL);
   }
   else
-    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, NULL, -1, NULL);
-  *done = TRUE;
+    Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, NULL, -1, NULL);
+  *done = true;
   return CURLE_OK;
 }
 

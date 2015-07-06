@@ -692,7 +692,7 @@ static CURLcode ssh_check_fingerprint(struct connectdata *conn)
 /*
  * ssh_statemach_act() runs the SSH state machine as far as it can without
  * blocking and without reaching the end.  The data the pointer 'block' points
- * to will be set to TRUE if the libssh2 function returns LIBSSH2_ERROR_EAGAIN
+ * to will be set to true if the libssh2 function returns LIBSSH2_ERROR_EAGAIN
  * meaning it wants to be called again when the socket is ready
  */
 
@@ -768,7 +768,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
 
       if(!sshc->authlist) {
         if(libssh2_userauth_authenticated(sshc->ssh_session)) {
-          sshc->authed = TRUE;
+          sshc->authed = true;
           infof(data, "SSH user accepted with no authentication\n");
           state(conn, SSH_AUTH_DONE);
           break;
@@ -795,12 +795,12 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
        * Check the supported auth types in the order I feel is most secure
        * with the requested type of authentication
        */
-      sshc->authed = FALSE;
+      sshc->authed = false;
 
       if((data->set.ssh_auth_types & CURLSSH_AUTH_PUBLICKEY) &&
          (strstr(sshc->authlist, "publickey") != NULL)) {
         char *home = NULL;
-        bool out_of_memory = FALSE;
+        bool out_of_memory = false;
 
         sshc->rsa_pub = sshc->rsa = NULL;
 
@@ -816,12 +816,12 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
             /* Try ~/.ssh first. */
             sshc->rsa = aprintf("%s/.ssh/id_rsa", home);
             if(!sshc->rsa)
-              out_of_memory = TRUE;
+              out_of_memory = true;
             else if(access(sshc->rsa, R_OK) != 0) {
               Curl_safefree(sshc->rsa);
               sshc->rsa = aprintf("%s/.ssh/id_dsa", home);
               if(!sshc->rsa)
-                out_of_memory = TRUE;
+                out_of_memory = true;
               else if(access(sshc->rsa, R_OK) != 0) {
                 Curl_safefree(sshc->rsa);
               }
@@ -851,7 +851,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
         if(data->set.str[STRING_SSH_PUBLIC_KEY]) {
           sshc->rsa_pub = strdup(data->set.str[STRING_SSH_PUBLIC_KEY]);
           if(!sshc->rsa_pub)
-            out_of_memory = TRUE;
+            out_of_memory = true;
         }
 
         if(out_of_memory || sshc->rsa == NULL) {
@@ -896,7 +896,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
       Curl_safefree(sshc->rsa);
 
       if(rc == 0) {
-        sshc->authed = TRUE;
+        sshc->authed = true;
         infof(data, "Initialized SSH public key authentication\n");
         state(conn, SSH_AUTH_DONE);
       }
@@ -929,7 +929,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
         break;
       }
       else if(rc == 0) {
-        sshc->authed = TRUE;
+        sshc->authed = true;
         infof(data, "Initialized password authentication\n");
         state(conn, SSH_AUTH_DONE);
       }
@@ -1033,7 +1033,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
         infof(data, "No identity would match\n");
 
       if(rc == LIBSSH2_ERROR_NONE) {
-        sshc->authed = TRUE;
+        sshc->authed = true;
         infof(data, "Agent based authentication successful\n");
         state(conn, SSH_AUTH_DONE);
       }
@@ -1063,7 +1063,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
         break;
       }
       else if(rc == 0) {
-        sshc->authed = TRUE;
+        sshc->authed = true;
         infof(data, "Initialized keyboard interactive authentication\n");
       }
       state(conn, SSH_AUTH_DONE);
@@ -1201,7 +1201,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
        * Support some of the "FTP" commands
        */
       char *cmd = sshc->quote_item->data;
-      sshc->acceptfail = FALSE;
+      sshc->acceptfail = false;
 
       /* if a command starts with an asterisk, which a legal SFTP command never
          can, the command will be allowed to fail without it causing any
@@ -1210,7 +1210,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
 
       if(cmd[0] == '*') {
         cmd++;
-        sshc->acceptfail = TRUE;
+        sshc->acceptfail = true;
       }
 
       if(curl_strequal("pwd", cmd)) {
@@ -1393,7 +1393,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
     case SSH_SFTP_QUOTE_STAT:
     {
       char *cmd = sshc->quote_item->data;
-      sshc->acceptfail = FALSE;
+      sshc->acceptfail = false;
 
       /* if a command starts with an asterisk, which a legal SFTP command never
          can, the command will be allowed to fail without it causing any
@@ -1402,7 +1402,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
 
       if(cmd[0] == '*') {
         cmd++;
-        sshc->acceptfail = TRUE;
+        sshc->acceptfail = true;
       }
 
       if(!curl_strnequal(cmd, "chmod", 5)) {
@@ -1765,7 +1765,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
         Curl_pgrsSetUploadSize(data, data->state.infilesize);
       }
       /* upload data */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
+      Curl_setup_transfer(conn, -1, -1, false, NULL, FIRSTSOCKET, NULL);
 
       /* not set by Curl_setup_transfer to preserve keepon bits */
       conn->sockfd = conn->writesockfd;
@@ -2062,7 +2062,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
       Curl_safefree(sshc->readdir_longentry);
 
       /* no data to transfer */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
       state(conn, SSH_STOP);
       break;
 
@@ -2197,14 +2197,14 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
     /* Setup the actual download */
     if(data->req.size == 0) {
       /* no data to transfer */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
       infof(data, "File already completely downloaded\n");
       state(conn, SSH_STOP);
       break;
     }
     else {
       Curl_setup_transfer(conn, FIRSTSOCKET, data->req.size,
-                          FALSE, NULL, -1, NULL);
+                          false, NULL, -1, NULL);
 
       /* not set by Curl_setup_transfer to preserve keepon bits */
       conn->writesockfd = conn->sockfd;
@@ -2339,7 +2339,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
       }
 
       /* upload data */
-      Curl_setup_transfer(conn, -1, data->req.size, FALSE, NULL,
+      Curl_setup_transfer(conn, -1, data->req.size, false, NULL,
                           FIRSTSOCKET, NULL);
 
       /* not set by Curl_setup_transfer to preserve keepon bits */
@@ -2400,7 +2400,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
       /* download data */
       bytecount = (curl_off_t)sb.st_size;
       data->req.maxdownload =  (curl_off_t)sb.st_size;
-      Curl_setup_transfer(conn, FIRSTSOCKET, bytecount, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, FIRSTSOCKET, bytecount, false, NULL, -1, NULL);
 
       /* not set by Curl_setup_transfer to preserve keepon bits */
       conn->writesockfd = conn->sockfd;
@@ -2604,7 +2604,7 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
   if(rc == LIBSSH2_ERROR_EAGAIN) {
     /* we would block, we need to wait for the socket to be ready (in the
        right direction too)! */
-    *block = TRUE;
+    *block = true;
   }
 
   return result;
@@ -2694,7 +2694,7 @@ static CURLcode ssh_multi_statemach(struct connectdata *conn, bool *done)
                  implementation */
 
   result = ssh_statemach_act(conn, &block);
-  *done = (sshc->state == SSH_STOP) ? TRUE : FALSE;
+  *done = (sshc->state == SSH_STOP) ? true : false;
   ssh_block2waitfor(conn, block);
 
   return result;
@@ -2866,7 +2866,7 @@ CURLcode scp_perform(struct connectdata *conn,
 
   DEBUGF(infof(conn->data, "DO phase starts\n"));
 
-  *dophase_done = FALSE; /* not done yet */
+  *dophase_done = false; /* not done yet */
 
   /* start the first command in the DO phase */
   state(conn, SSH_SCP_TRANS_INIT);
@@ -2908,7 +2908,7 @@ static CURLcode ssh_do(struct connectdata *conn, bool *done)
   struct SessionHandle *data = conn->data;
   struct ssh_conn *sshc = &conn->proto.sshc;
 
-  *done = FALSE; /* default to false */
+  *done = false; /* default to false */
 
   data->req.size = -1; /* make sure this is unknown at this point */
 
@@ -2945,7 +2945,7 @@ static CURLcode scp_disconnect(struct connectdata *conn, bool dead_connection)
 
     state(conn, SSH_SESSION_DISCONNECT);
 
-    result = ssh_block_statemach(conn, FALSE);
+    result = ssh_block_statemach(conn, false);
   }
 
   return result;
@@ -2966,7 +2966,7 @@ static CURLcode ssh_done(struct connectdata *conn, CURLcode status)
        non-blocking DONE operations, not in the multi state machine and with
        Curl_done() invokes on several places in the code!
     */
-    result = ssh_block_statemach(conn, FALSE);
+    result = ssh_block_statemach(conn, false);
   }
   else
     result = status;
@@ -3004,7 +3004,7 @@ static ssize_t scp_send(struct connectdata *conn, int sockindex,
   nwrite = (ssize_t)
     libssh2_channel_write(conn->proto.sshc.ssh_channel, mem, len);
 
-  ssh_block2waitfor(conn, (nwrite == LIBSSH2_ERROR_EAGAIN)?TRUE:FALSE);
+  ssh_block2waitfor(conn, (nwrite == LIBSSH2_ERROR_EAGAIN)?true:false);
 
   if(nwrite == LIBSSH2_ERROR_EAGAIN) {
     *err = CURLE_AGAIN;
@@ -3032,7 +3032,7 @@ static ssize_t scp_recv(struct connectdata *conn, int sockindex,
   nread = (ssize_t)
     libssh2_channel_read(conn->proto.sshc.ssh_channel, mem, len);
 
-  ssh_block2waitfor(conn, (nread == LIBSSH2_ERROR_EAGAIN)?TRUE:FALSE);
+  ssh_block2waitfor(conn, (nread == LIBSSH2_ERROR_EAGAIN)?true:false);
   if(nread == LIBSSH2_ERROR_EAGAIN) {
     *err = CURLE_AGAIN;
     nread = -1;
@@ -3063,7 +3063,7 @@ CURLcode sftp_perform(struct connectdata *conn,
 
   DEBUGF(infof(conn->data, "DO phase starts\n"));
 
-  *dophase_done = FALSE; /* not done yet */
+  *dophase_done = false; /* not done yet */
 
   /* start the first command in the DO phase */
   state(conn, SSH_SFTP_QUOTE_INIT);
@@ -3107,7 +3107,7 @@ static CURLcode sftp_disconnect(struct connectdata *conn, bool dead_connection)
   if(conn->proto.sshc.ssh_session) {
     /* only if there's a session still around to use! */
     state(conn, SSH_SFTP_SHUTDOWN);
-    result = ssh_block_statemach(conn, FALSE);
+    result = ssh_block_statemach(conn, false);
   }
 
   DEBUGF(infof(conn->data, "SSH DISCONNECT is done\n"));
@@ -3146,7 +3146,7 @@ static ssize_t sftp_send(struct connectdata *conn, int sockindex,
 
   nwrite = libssh2_sftp_write(conn->proto.sshc.sftp_handle, mem, len);
 
-  ssh_block2waitfor(conn, (nwrite == LIBSSH2_ERROR_EAGAIN)?TRUE:FALSE);
+  ssh_block2waitfor(conn, (nwrite == LIBSSH2_ERROR_EAGAIN)?true:false);
 
   if(nwrite == LIBSSH2_ERROR_EAGAIN) {
     *err = CURLE_AGAIN;
@@ -3172,7 +3172,7 @@ static ssize_t sftp_recv(struct connectdata *conn, int sockindex,
 
   nread = libssh2_sftp_read(conn->proto.sshc.sftp_handle, mem, len);
 
-  ssh_block2waitfor(conn, (nread == LIBSSH2_ERROR_EAGAIN)?TRUE:FALSE);
+  ssh_block2waitfor(conn, (nread == LIBSSH2_ERROR_EAGAIN)?true:false);
 
   if(nread == LIBSSH2_ERROR_EAGAIN) {
     *err = CURLE_AGAIN;

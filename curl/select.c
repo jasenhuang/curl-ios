@@ -331,7 +331,7 @@ int Curl_socket_check(curl_socket_t readfd0, /* two sockets to read from */
     if(error && error_not_EINTR)
       break;
     if(timeout_ms > 0) {
-      pending_ms = timeout_ms - elapsed_ms;
+      pending_ms = (int)timeout_ms - elapsed_ms;
       if(pending_ms <= 0) {
         r = 0;  /* Simulate a "call timed out" case */
         break;
@@ -394,7 +394,7 @@ int Curl_poll(struct pollfd ufds[], unsigned int nfds, int timeout_ms)
   curl_socket_t maxfd;
 #endif
   struct timeval initial_tv = {0, 0};
-  bool fds_none = TRUE;
+  bool fds_none = true;
   unsigned int i;
   int pending_ms = 0;
   int error;
@@ -403,7 +403,7 @@ int Curl_poll(struct pollfd ufds[], unsigned int nfds, int timeout_ms)
   if(ufds) {
     for(i = 0; i < nfds; i++) {
       if(ufds[i].fd != CURL_SOCKET_BAD) {
-        fds_none = FALSE;
+        fds_none = false;
         break;
       }
     }

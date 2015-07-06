@@ -98,8 +98,8 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
   CURLcode result;
   curl_socket_t tunnelsocket = conn->sock[sockindex];
   curl_off_t cl=0;
-  bool closeConnection = FALSE;
-  bool chunked_encoding = FALSE;
+  bool closeConnection = false;
+  bool chunked_encoding = false;
   long check;
 
 #define SELECT_OK      0
@@ -110,7 +110,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
   if(conn->tunnel_state[sockindex] == TUNNEL_COMPLETE)
     return CURLE_OK; /* CONNECT is already completed */
 
-  conn->bits.proxy_connect_closed = FALSE;
+  conn->bits.proxy_connect_closed = false;
 
   do {
     if(TUNNEL_INIT == conn->tunnel_state[sockindex]) {
@@ -140,7 +140,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
       }
 
       /* Setup the proxy-authorization header, if any */
-      result = Curl_http_output_auth(conn, "CONNECT", host_port, TRUE);
+      result = Curl_http_output_auth(conn, "CONNECT", host_port, true);
 
       free(host_port);
 
@@ -194,7 +194,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
         free(hostheader);
 
         if(!result)
-          result = Curl_add_custom_headers(conn, TRUE, req_buffer);
+          result = Curl_add_custom_headers(conn, true, req_buffer);
 
         if(!result)
           /* CRLF terminate the request */
@@ -219,7 +219,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
       conn->tunnel_state[sockindex] = TUNNEL_CONNECT;
     } /* END CONNECT PHASE */
 
-    check = Curl_timeleft(data, NULL, TRUE);
+    check = Curl_timeleft(data, NULL, true);
     if(check <= 0) {
       failf(data, "Proxy CONNECT aborted due to timeout");
       return CURLE_RECV_ERROR;
@@ -238,7 +238,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
     { /* READING RESPONSE PHASE */
       size_t nread;   /* total size read */
       int perline; /* count bytes per line */
-      int keepon=TRUE;
+      int keepon= true;
       ssize_t gotbytes;
       char *ptr;
       char *line_start;
@@ -251,7 +251,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
 
       while((nread<BUFSIZE) && (keepon && !error)) {
 
-        check = Curl_timeleft(data, NULL, TRUE);
+        check = Curl_timeleft(data, NULL, true);
         if(check <= 0) {
           failf(data, "Proxy CONNECT aborted due to timeout");
           error = SELECT_TIMEOUT; /* already too little time */
@@ -274,13 +274,13 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
           if(result==CURLE_AGAIN)
             continue; /* go loop yourself */
           else if(result)
-            keepon = FALSE;
+            keepon = false;
           else if(gotbytes <= 0) {
-            keepon = FALSE;
+            keepon = false;
             if(data->set.proxyauth && data->state.authproxy.avail) {
               /* proxy auth was requested and there was proxy auth available,
                  then deem this as "mere" proxy disconnect */
-              conn->bits.proxy_connect_closed = TRUE;
+              conn->bits.proxy_connect_closed = true;
               infof(data, "Proxy CONNECT connection closed");
             }
             else {
@@ -298,7 +298,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
 
             nread += gotbytes;
 
-            if(keepon > TRUE) {
+            if(keepon > true) {
               /* This means we are currently ignoring a response-body */
 
               nread = 0; /* make next read start over in the read buffer */
@@ -308,7 +308,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                    and make sure to break out of the loop when we're done! */
                 cl -= gotbytes;
                 if(cl<=0) {
-                  keepon = FALSE;
+                  keepon = false;
                   break;
                 }
               }
@@ -324,7 +324,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                 if(r == CHUNKE_STOP) {
                   /* we're done reading chunks! */
                   infof(data, "chunk reading DONE\n");
-                  keepon = FALSE;
+                  keepon = false;
                   /* we did the full CONNECT treatment, go COMPLETE */
                   conn->tunnel_state[sockindex] = TUNNEL_COMPLETE;
                 }
@@ -393,7 +393,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                         if(cl<=0)
                           /* if the whole thing was already read, we are done!
                            */
-                          keepon=FALSE;
+                          keepon=false;
                       }
                       else if(chunked_encoding) {
                         CHUNKcode r;
@@ -401,7 +401,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                            decoder function will acknowledge that. Pay
                            attention so that this is cleared again when this
                            function returns! */
-                        k->ignorebody = TRUE;
+                        k->ignorebody = true;
                         infof(data, "%zd bytes of chunk left\n", gotbytes-i);
 
                         if(line_start[1] == '\n') {
@@ -418,7 +418,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                         if(r == CHUNKE_STOP) {
                           /* we're done reading chunks! */
                           infof(data, "chunk reading DONE\n");
-                          keepon = FALSE;
+                          keepon = false;
                           /* we did the full CONNECT treatment, go to
                              COMPLETE */
                           conn->tunnel_state[sockindex] = TUNNEL_COMPLETE;
@@ -431,11 +431,11 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                         /* without content-length or chunked encoding, we
                            can't keep the connection alive since the close is
                            the end signal so we bail out at once instead */
-                        keepon=FALSE;
+                        keepon=false;
                       }
                     }
                     else {
-                      keepon = FALSE;
+                      keepon = false;
                       if(200 == data->info.httpproxycode) {
                         if(gotbytes - (i+1))
                           failf(data, "Proxy CONNECT followed by %zd bytes "
@@ -456,7 +456,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                      (checkprefix("Proxy-authenticate:", line_start) &&
                       (407 == k->httpcode))) {
 
-                    bool proxy = (k->httpcode == 407) ? TRUE : FALSE;
+                    bool proxy = (k->httpcode == 407) ? true : false;
                     char *auth = Curl_copy_header_value(line_start);
                     if(!auth)
                       return CURLE_OUT_OF_MEMORY;
@@ -474,18 +474,18 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                   }
                   else if(Curl_compareheader(line_start,
                                              "Connection:", "close"))
-                    closeConnection = TRUE;
+                    closeConnection = true;
                   else if(Curl_compareheader(line_start,
                                              "Transfer-Encoding:",
                                              "chunked")) {
                     infof(data, "CONNECT responded chunked\n");
-                    chunked_encoding = TRUE;
+                    chunked_encoding = true;
                     /* init our chunky engine */
                     Curl_httpchunk_init(conn);
                   }
                   else if(Curl_compareheader(line_start,
                                              "Proxy-Connection:", "close"))
-                    closeConnection = TRUE;
+                    closeConnection = true;
                   else if(2 == sscanf(line_start, "HTTP/1.%d %d",
                                       &subversion,
                                       &k->httpcode)) {
@@ -521,7 +521,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
              Curl_http_auth_act() function and thus we can kill it at once
              below
           */
-          closeConnection = TRUE;
+          closeConnection = true;
       }
 
       if(closeConnection && data->req.newurl) {
@@ -546,7 +546,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
 
   if(200 != data->req.httpcode) {
     if(closeConnection && data->req.newurl) {
-      conn->bits.proxy_connect_closed = TRUE;
+      conn->bits.proxy_connect_closed = true;
       infof(data, "Connect me again please\n");
     }
     else {
@@ -579,11 +579,11 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
   Curl_safefree(conn->allocptr.proxyuserpwd);
   conn->allocptr.proxyuserpwd = NULL;
 
-  data->state.authproxy.done = TRUE;
+  data->state.authproxy.done = true;
 
   infof (data, "Proxy replied OK to CONNECT request\n");
-  data->req.ignorebody = FALSE; /* put it (back) to non-ignore state */
-  conn->bits.rewindaftersend = FALSE; /* make sure this isn't set for the
+  data->req.ignorebody = false; /* put it (back) to non-ignore state */
+  conn->bits.rewindaftersend = false; /* make sure this isn't set for the
                                          document request  */
   return CURLE_OK;
 }

@@ -334,33 +334,34 @@ struct timeval {
 
 
 /*
- * Redefine TRUE and FALSE too, to catch current use. With this
+ * Redefine true and false too, to catch current use. With this
  * change, 'bool found = 1' will give a warning on MIPSPro, but
- * 'bool found = TRUE' will not. Change tested on IRIX/MIPSPro,
+ * 'bool found = true' will not. Change tested on IRIX/MIPSPro,
  * AIX 5.1/Xlc, Tru64 5.1/cc, w/make test too.
  */
 
-#ifndef TRUE
-#define TRUE true
+#ifndef true
+#define true true
 #endif
-#ifndef FALSE
-#define FALSE false
+
+#ifndef false
+#define false false
 #endif
 
 
 /*
- * Macro WHILE_FALSE may be used to build single-iteration do-while loops,
+ * Macro WHILE_false may be used to build single-iteration do-while loops,
  * avoiding compiler warnings. Mostly intended for other macro definitions.
  */
 
-#define WHILE_FALSE  while(0)
+#define WHILE_false  while(0)
 
 #if defined(_MSC_VER) && !defined(__POCC__)
-#  undef WHILE_FALSE
+#  undef WHILE_false
 #  if (_MSC_VER < 1500)
-#    define WHILE_FALSE  while(1, 0)
+#    define WHILE_false  while(1, 0)
 #  else
-#    define WHILE_FALSE \
+#    define WHILE_false \
 __pragma(warning(push)) \
 __pragma(warning(disable:4127)) \
 while(0) \
@@ -406,7 +407,7 @@ typedef int sig_atomic_t;
 #ifdef DEBUGBUILD
 #define DEBUGF(x) x
 #else
-#define DEBUGF(x) do { } WHILE_FALSE
+#define DEBUGF(x) do { } WHILE_false
 #endif
 
 
@@ -417,7 +418,7 @@ typedef int sig_atomic_t;
 #if defined(DEBUGBUILD) && defined(HAVE_ASSERT_H)
 #define DEBUGASSERT(x) assert(x)
 #else
-#define DEBUGASSERT(x) do { } WHILE_FALSE
+#define DEBUGASSERT(x) do { } WHILE_false
 #endif
 
 

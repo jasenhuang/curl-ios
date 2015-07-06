@@ -79,7 +79,7 @@ static void tls_log_func(int level, const char *str)
     fprintf(stderr, "|<%d>| %s", level, str);
 }
 #endif
-static bool gtls_inited = FALSE;
+static bool gtls_inited = false;
 
 #if defined(GNUTLS_VERSION_NUMBER)
 #  if (GNUTLS_VERSION_NUMBER >= 0x020c00)
@@ -186,7 +186,7 @@ int Curl_gtls_init(void)
     gnutls_global_set_log_function(tls_log_func);
     gnutls_global_set_log_level(2);
 #endif
-    gtls_inited = TRUE;
+    gtls_inited = true;
   }
   return ret;
 }
@@ -195,7 +195,7 @@ int Curl_gtls_cleanup(void)
 {
   if(gtls_inited) {
     gnutls_global_deinit();
-    gtls_inited = FALSE;
+    gtls_inited = false;
   }
   return 1;
 }
@@ -370,7 +370,7 @@ gtls_connect_step1(struct connectdata *conn,
   int rc;
   void *ssl_sessionid;
   size_t ssl_idsize;
-  bool sni = TRUE; /* default is SNI enabled */
+  bool sni = true; /* default is SNI enabled */
 #ifdef ENABLE_IPV6
   struct in6_addr addr;
 #else
@@ -415,7 +415,7 @@ gtls_connect_step1(struct connectdata *conn,
     return CURLE_SSL_CONNECT_ERROR;
   }
   else if(data->set.ssl.version == CURL_SSLVERSION_SSLv3)
-    sni = FALSE; /* SSLv3 has no SNI */
+    sni = false; /* SSLv3 has no SNI */
 
   /* allocate a cred struct */
   rc = gnutls_certificate_allocate_credentials(&conn->ssl[sockindex].cred);
@@ -939,7 +939,7 @@ gtls_connect_step3(struct connectdata *conn,
   size=sizeof(certbuf);
   rc = gnutls_x509_crt_get_dn_by_oid(x509_cert, GNUTLS_OID_X520_COMMON_NAME,
                                      0, /* the first and only one */
-                                     FALSE,
+                                     false,
                                      certbuf,
                                      &size);
   if(rc) {
@@ -1203,7 +1203,7 @@ gtls_connect_common(struct connectdata *conn,
       return rc;
   }
 
-  rc = handshake(conn, sockindex, TRUE, nonblocking);
+  rc = handshake(conn, sockindex, true, nonblocking);
   if(rc)
     /* handshake() sets its own error message with failf() */
     return rc;
@@ -1225,7 +1225,7 @@ Curl_gtls_connect_nonblocking(struct connectdata *conn,
                               int sockindex,
                               bool *done)
 {
-  return gtls_connect_common(conn, sockindex, TRUE, done);
+  return gtls_connect_common(conn, sockindex, true, done);
 }
 
 CURLcode
@@ -1234,9 +1234,9 @@ Curl_gtls_connect(struct connectdata *conn,
 
 {
   CURLcode result;
-  bool done = FALSE;
+  bool done = false;
 
-  result = gtls_connect_common(conn, sockindex, FALSE, &done);
+  result = gtls_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 
@@ -1380,7 +1380,7 @@ static ssize_t gtls_recv(struct connectdata *conn, /* connection data */
   if(ret == GNUTLS_E_REHANDSHAKE) {
     /* BLOCKING call, this is bad but a work-around for now. Fixing this "the
        proper way" takes a whole lot of work. */
-    CURLcode result = handshake(conn, num, FALSE, FALSE);
+    CURLcode result = handshake(conn, num, false, false);
     if(result)
       /* handshake() writes error message on its own */
       *curlcode = result;
@@ -1414,7 +1414,7 @@ static int Curl_gtls_seed(struct SessionHandle *data)
 {
   /* we have the "SSL is seeded" boolean static to prevent multiple
      time-consuming seedings in vain */
-  static bool ssl_seeded = FALSE;
+  static bool ssl_seeded = false;
 
   /* Quickly add a bit of entropy */
   gcry_fast_random_poll();
@@ -1427,7 +1427,7 @@ static int Curl_gtls_seed(struct SessionHandle *data)
        GCRYCTL_SET_RANDOM_SEED_FILE
        GCRYCTL_SET_RNDEGD_SOCKET
     */
-    ssl_seeded = TRUE;
+    ssl_seeded = true;
   }
   return 0;
 }
@@ -1471,9 +1471,9 @@ void Curl_gtls_md5sum(unsigned char *tmp, /* input */
 bool Curl_gtls_cert_status_request(void)
 {
 #ifdef HAS_OCSP
-  return TRUE;
+  return true;
 #else
-  return FALSE;
+  return false;
 #endif
 }
 

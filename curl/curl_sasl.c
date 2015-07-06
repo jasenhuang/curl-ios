@@ -99,8 +99,8 @@ static int sasl_digest_get_pair(const char *str, char *value, char *content,
                                 const char **endptr)
 {
   int c;
-  bool starts_with_quote = FALSE;
-  bool escape = FALSE;
+  bool starts_with_quote = false;
+  bool escape = false;
 
   for(c = DIGEST_MAX_VALUE_LENGTH - 1; (*str && (*str != '=') && c--); )
     *value++ = *str++;
@@ -113,7 +113,7 @@ static int sasl_digest_get_pair(const char *str, char *value, char *content,
   if('\"' == *str) {
     /* this starts with a quote so it must end with one as well! */
     str++;
-    starts_with_quote = TRUE;
+    starts_with_quote = true;
   }
 
   for(c = DIGEST_MAX_CONTENT_LENGTH - 1; *str && c--; str++) {
@@ -121,7 +121,7 @@ static int sasl_digest_get_pair(const char *str, char *value, char *content,
     case '\\':
       if(!escape) {
         /* possibly the start of an escaped quote */
-        escape = TRUE;
+        escape = true;
         *content++ = '\\'; /* even though this is an escape character, we still
                               store it as-is in the target buffer */
         continue;
@@ -148,7 +148,7 @@ static int sasl_digest_get_pair(const char *str, char *value, char *content,
       }
       break;
     }
-    escape = FALSE;
+    escape = false;
     *content++ = *str;
   }
   *content = 0;
@@ -200,7 +200,7 @@ static char *sasl_digest_string_quoted(const char *source)
 }
 
 /* Retrieves the value for a corresponding key from the challenge string
- * returns TRUE if the key could be found, FALSE if it does not exists
+ * returns true if the key could be found, false if it does not exists
  */
 static bool sasl_digest_get_key_value(const char *chlg,
                                       const char *key,
@@ -213,7 +213,7 @@ static bool sasl_digest_get_key_value(const char *chlg,
 
   find_pos = strstr(chlg, key);
   if(!find_pos)
-    return FALSE;
+    return false;
 
   find_pos += strlen(key);
 
@@ -221,7 +221,7 @@ static bool sasl_digest_get_key_value(const char *chlg,
     value[i] = *find_pos++;
   value[i] = '\0';
 
-  return TRUE;
+  return true;
 }
 
 static CURLcode sasl_digest_get_qop_values(const char *options, int *value)
@@ -754,15 +754,15 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
 CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
                                               struct digestdata *digest)
 {
-  bool before = FALSE; /* got a nonce before */
-  bool foundAuth = FALSE;
-  bool foundAuthInt = FALSE;
+  bool before = false; /* got a nonce before */
+  bool foundAuth = false;
+  bool foundAuthInt = false;
   char *token = NULL;
   char *tmp = NULL;
 
   /* If we already have received a nonce, keep that in mind */
   if(digest->nonce)
-    before = TRUE;
+    before = true;
 
   /* Clean up any former leftovers and initialise to defaults */
   Curl_sasl_digest_cleanup(digest);
@@ -784,7 +784,7 @@ CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
       }
       else if(Curl_raw_equal(value, "stale")) {
         if(Curl_raw_equal(content, "true")) {
-          digest->stale = TRUE;
+          digest->stale = true;
           digest->nc = 1; /* we make a new nonce now */
         }
       }
@@ -809,10 +809,10 @@ CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
         token = strtok_r(tmp, ",", &tok_buf);
         while(token != NULL) {
           if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH)) {
-            foundAuth = TRUE;
+            foundAuth = true;
           }
           else if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH_INT)) {
-            foundAuthInt = TRUE;
+            foundAuthInt = true;
           }
           token = strtok_r(NULL, ",", &tok_buf);
         }
@@ -860,7 +860,7 @@ CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
   }
 
   /* We had a nonce since before, and we got another one now without
-     'stale=true'. This means we provided bad credentials in the previous
+     'stale= true'. This means we provided bad credentials in the previous
      request */
   if(before && !digest->stale)
     return CURLE_BAD_CONTENT_ENCODING;
@@ -1123,7 +1123,7 @@ void Curl_sasl_digest_cleanup(struct digestdata *digest)
 
   digest->nc = 0;
   digest->algo = CURLDIGESTALGO_MD5; /* default algorithm */
-  digest->stale = FALSE; /* default means normal, not stale */
+  digest->stale = false; /* default means normal, not stale */
 }
 #endif  /* !USE_WINDOWS_SSPI */
 
@@ -1274,7 +1274,7 @@ CURLcode Curl_sasl_parse_url_auth_option(struct SASL *sasl,
     return CURLE_URL_MALFORMAT;
 
     if(sasl->resetprefs) {
-      sasl->resetprefs = FALSE;
+      sasl->resetprefs = false;
       sasl->prefmech = SASL_AUTH_NONE;
     }
 
@@ -1301,9 +1301,9 @@ void Curl_sasl_init(struct SASL *sasl, const struct SASLproto *params)
   sasl->authmechs = SASL_AUTH_NONE; /* No known authentication mechanism yet */
   sasl->prefmech = SASL_AUTH_DEFAULT; /* Prefer all mechanisms */
   sasl->authused = SASL_AUTH_NONE; /* No the authentication mechanism used */
-  sasl->resetprefs = TRUE;         /* Reset prefmech upon AUTH parsing. */
-  sasl->mutual_auth = FALSE;       /* No mutual authentication (GSSAPI only) */
-  sasl->force_ir = FALSE;          /* Respect external option */
+  sasl->resetprefs = true;         /* Reset prefmech upon AUTH parsing. */
+  sasl->mutual_auth = false;       /* No mutual authentication (GSSAPI only) */
+  sasl->force_ir = false;          /* Respect external option */
 }
 
 /*
@@ -1355,13 +1355,13 @@ bool Curl_sasl_can_authenticate(struct SASL *sasl, struct connectdata *conn)
 {
   /* Have credentials been provided? */
   if(conn->bits.user_passwd)
-    return TRUE;
+    return true;
 
   /* EXTERNAL can authenticate without a user name and/or password */
   if(sasl->authmechs & sasl->prefmech & SASL_MECH_EXTERNAL)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 /*
@@ -1399,7 +1399,7 @@ CURLcode Curl_sasl_start(struct SASL *sasl, struct connectdata *conn,
   else if(conn->bits.user_passwd) {
 #if defined(USE_KERBEROS5)
     if(enabledmechs & SASL_MECH_GSSAPI) {
-      sasl->mutual_auth = FALSE; /* TODO: Calculate mutual authentication */
+      sasl->mutual_auth = false; /* TODO: Calculate mutual authentication */
       mech = SASL_MECH_STRING_GSSAPI;
       state1 = SASL_GSSAPI;
       state2 = SASL_GSSAPI_TOKEN;

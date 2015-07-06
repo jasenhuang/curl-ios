@@ -104,7 +104,7 @@ struct memdebug {
 
 #define logfile curl_debuglogfile
 FILE *curl_debuglogfile = NULL;
-static bool memlimit = FALSE; /* enable memory limit */
+static bool memlimit = false; /* enable memory limit */
 static long memsize = 0;  /* set number of mallocs allowed */
 
 /* this sets the log file name */
@@ -127,12 +127,12 @@ void curl_memdebug(const char *logname)
 void curl_memlimit(long limit)
 {
   if(!memlimit) {
-    memlimit = TRUE;
+    memlimit = true;
     memsize = limit;
   }
 }
 
-/* returns TRUE if this isn't allowed! */
+/* returns true if this isn't allowed! */
 static bool countcheck(const char *func, int line, const char *source)
 {
   /* if source is NULL, then the call is made internally and this check
@@ -148,7 +148,7 @@ static bool countcheck(const char *func, int line, const char *source)
                 source, line, func);
       }
       SET_ERRNO(ENOMEM);
-      return TRUE; /* RETURN ERROR! */
+      return true; /* RETURN ERROR! */
     }
     else
       memsize--; /* countdown */
@@ -160,7 +160,7 @@ static bool countcheck(const char *func, int line, const char *source)
 
   }
 
-  return FALSE; /* allow this */
+  return false; /* allow this */
 }
 
 void *curl_domalloc(size_t wantedsize, int line, const char *source)

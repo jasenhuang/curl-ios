@@ -243,7 +243,7 @@ static int on_frame_recv(nghttp2_session *session, const nghttp2_frame *frame,
 
     /* Only final status code signals the end of header */
     if(c->status_code / 100 != 1) {
-      c->bodystarted = TRUE;
+      c->bodystarted = true;
     }
 
     c->status_code = -1;
@@ -364,7 +364,7 @@ static int on_stream_close(nghttp2_session *session, int32_t stream_id,
   }
 
   c->error_code = error_code;
-  c->closed = TRUE;
+  c->closed = true;
 
   return 0;
 }
@@ -683,9 +683,9 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
   (void)sockindex; /* we always do HTTP2 on sockindex 0 */
 
   if(httpc->closed) {
-    /* Reset to FALSE to prevent infinite loop in readwrite_data
+    /* Reset to false to prevent infinite loop in readwrite_data
        function. */
-    httpc->closed = FALSE;
+    httpc->closed = false;
     return 0;
   }
 
@@ -771,9 +771,9 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
   /* If stream is closed, return 0 to signal the http routine to close
      the connection */
   if(httpc->closed) {
-    /* Reset to FALSE to prevent infinite loop in readwrite_data
+    /* Reset to false to prevent infinite loop in readwrite_data
        function. */
-    httpc->closed = FALSE;
+    httpc->closed = false;
     if(httpc->error_code != NGHTTP2_NO_ERROR) {
       failf(conn->data,
             "HTTP/2 stream = %x was not closed cleanly: error_code = %d",
@@ -982,9 +982,9 @@ CURLcode Curl_http2_setup(struct connectdata *conn)
     return result;
 
   infof(conn->data, "Using HTTP2\n");
-  httpc->bodystarted = FALSE;
+  httpc->bodystarted = false;
   httpc->error_code = NGHTTP2_NO_ERROR;
-  httpc->closed = FALSE;
+  httpc->closed = false;
   httpc->header_recvbuf = Curl_add_buffer_init();
   httpc->nread_header_recvbuf = 0;
   httpc->data = NULL;

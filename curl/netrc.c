@@ -60,20 +60,20 @@ int Curl_parsenetrc(const char *host,
   FILE *file;
   int retcode=1;
   int specific_login = (*loginp && **loginp != 0);
-  bool netrc_alloc = FALSE;
+  bool netrc_alloc = false;
   enum host_lookup_state state=NOTHING;
 
   char state_login=0;      /* Found a login keyword */
   char state_password=0;   /* Found a password keyword */
-  int state_our_login=FALSE;  /* With specific_login, found *our* login name */
+  int state_our_login=false;  /* With specific_login, found *our* login name */
 
 #define NETRC DOT_CHAR "netrc"
 
   if(!netrcfile) {
-    bool home_alloc = FALSE;
+    bool home_alloc = false;
     char *home = curl_getenv("HOME"); /* portable environment reader */
     if(home) {
-      home_alloc = TRUE;
+      home_alloc = true;
 #if defined(HAVE_GETPWUID_R) && defined(HAVE_GETEUID)
     }
     else {
@@ -84,7 +84,7 @@ int Curl_parsenetrc(const char *host,
         home = strdup(pw.pw_dir);
         if(!home)
           return CURLE_OUT_OF_MEMORY;
-        home_alloc = TRUE;
+        home_alloc = true;
       }
 #elif defined(HAVE_GETPWUID) && defined(HAVE_GETEUID)
     }
@@ -106,7 +106,7 @@ int Curl_parsenetrc(const char *host,
     if(!netrcfile) {
       return -1;
     }
-    netrc_alloc = TRUE;
+    netrc_alloc = true;
   }
 
   file = fopen(netrcfile, "r");
@@ -115,7 +115,7 @@ int Curl_parsenetrc(const char *host,
   if(file) {
     char *tok;
     char *tok_buf;
-    bool done=FALSE;
+    bool done=false;
     char netrcbuffer[256];
     int  netrcbuffsize = (int)sizeof(netrcbuffer);
 
@@ -124,7 +124,7 @@ int Curl_parsenetrc(const char *host,
       while(!done && tok) {
 
         if((*loginp && **loginp) && (*passwordp && **passwordp)) {
-          done=TRUE;
+          done= true;
           break;
         }
 
@@ -182,7 +182,7 @@ int Curl_parsenetrc(const char *host,
           else if(Curl_raw_equal("machine", tok)) {
             /* ok, there's machine here go => */
             state = HOSTFOUND;
-            state_our_login = FALSE;
+            state_our_login = false;
           }
           break;
         } /* switch (state) */

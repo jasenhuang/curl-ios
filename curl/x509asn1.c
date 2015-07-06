@@ -190,7 +190,7 @@ static const char * bool2str(const char * beg, const char * end)
 
   if(end - beg != 1)
     return (const char *) NULL;
-  return strdup(*beg? "TRUE": "FALSE");
+  return strdup(*beg? "true": "false");
 }
 
 static const char * octet2str(const char * beg, const char * end)
@@ -560,7 +560,7 @@ const char * Curl_ASN1tostr(curl_asn1Element * elem, int type)
   case CURL_ASN1_NULL:
     return strdup("");
   case CURL_ASN1_OBJECT_IDENTIFIER:
-    return OID2str(elem->beg, elem->end, TRUE);
+    return OID2str(elem->beg, elem->end, true);
   case CURL_ASN1_UTC_TIME:
     return UTime2str(elem->beg, elem->end);
   case CURL_ASN1_GENERALIZED_TIME:
@@ -779,7 +779,7 @@ static const char * dumpAlgo(curl_asn1Element * param,
   param->beg = param->end = end;
   if(beg < end)
     Curl_getASN1Element(param, beg, end);
-  return OID2str(oid.beg, oid.end, TRUE);
+  return OID2str(oid.beg, oid.end, true);
 }
 
 static void do_pubkey_field(struct SessionHandle * data, int certnum,
@@ -1042,7 +1042,7 @@ static const char * checkOID(const char * beg, const char * end,
   if(!ccp || e.tag != CURL_ASN1_OBJECT_IDENTIFIER)
     return (const char *) NULL;
 
-  p = OID2str(e.beg, e.end, FALSE);
+  p = OID2str(e.beg, e.end, false);
   if(!p)
     return (const char *) NULL;
 

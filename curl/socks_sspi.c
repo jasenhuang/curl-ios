@@ -366,7 +366,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
    *
    * The token is produced by encapsulating an octet containing the
    * required protection level using gss_seal()/gss_wrap() with conf_req
-   * set to FALSE.  The token is verified using gss_unseal()/
+   * set to false.  The token is verified using gss_unseal()/
    * gss_unwrap().
    *
    */

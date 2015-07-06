@@ -52,12 +52,12 @@
 #define GSK_PROTOCOL_TLSV12                     438
 #endif
 
-#ifndef GSK_FALSE
-#define GSK_FALSE                               0
+#ifndef GSK_false
+#define GSK_false                               0
 #endif
 
-#ifndef GSK_TRUE
-#define GSK_TRUE                                1
+#ifndef GSK_true
+#define GSK_true                                1
 #endif
 
 
@@ -330,7 +330,7 @@ static CURLcode set_ciphers(struct SessionHandle *data,
   }
 
   /* Process each cipher in input string. */
-  unsupported = FALSE;
+  unsupported = false;
   result = CURLE_OK;
   for(;;) {
     for(clp = cipherlist; *cipherlist && !is_separator(*cipherlist);)
@@ -373,7 +373,7 @@ static CURLcode set_ciphers(struct SessionHandle *data,
   /* Try to set-up TLSv1.1 and TLSv2.1 ciphers. */
   if(*protoflags & CURL_GSKPROTO_TLSV11_MASK) {
     result = set_buffer(data, h, GSK_TLSV11_CIPHER_SPECS,
-                        ciphers[CURL_GSKPROTO_TLSV11].buf, TRUE);
+                        ciphers[CURL_GSKPROTO_TLSV11].buf, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL) {
       result = CURLE_OK;
       if(unsupported) {
@@ -384,7 +384,7 @@ static CURLcode set_ciphers(struct SessionHandle *data,
   }
   if(!result && (*protoflags & CURL_GSKPROTO_TLSV12_MASK)) {
     result = set_buffer(data, h, GSK_TLSV12_CIPHER_SPECS,
-                        ciphers[CURL_GSKPROTO_TLSV12].buf, TRUE);
+                        ciphers[CURL_GSKPROTO_TLSV12].buf, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL) {
       result = CURLE_OK;
       if(unsupported) {
@@ -398,7 +398,7 @@ static CURLcode set_ciphers(struct SessionHandle *data,
      the SSLv3 ciphers. OS/400 prior to version 7.1 will understand it. */
   if(!result && (*protoflags & CURL_GSKPROTO_TLSV10_MASK)) {
     result = set_buffer(data, h, GSK_TLSV10_CIPHER_SPECS,
-                        ciphers[CURL_GSKPROTO_TLSV10].buf, TRUE);
+                        ciphers[CURL_GSKPROTO_TLSV10].buf, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL) {
       result = CURLE_OK;
       strcpy(ciphers[CURL_GSKPROTO_SSLV3].ptr,
@@ -409,10 +409,10 @@ static CURLcode set_ciphers(struct SessionHandle *data,
   /* Set-up other ciphers. */
   if(!result && (*protoflags & CURL_GSKPROTO_SSLV3_MASK))
     result = set_buffer(data, h, GSK_V3_CIPHER_SPECS,
-                        ciphers[CURL_GSKPROTO_SSLV3].buf, FALSE);
+                        ciphers[CURL_GSKPROTO_SSLV3].buf, false);
   if(!result && (*protoflags & CURL_GSKPROTO_SSLV2_MASK))
     result = set_buffer(data, h, GSK_V2_CIPHER_SPECS,
-                        ciphers[CURL_GSKPROTO_SSLV2].buf, FALSE);
+                        ciphers[CURL_GSKPROTO_SSLV2].buf, false);
 
   /* Clean-up. */
   for(i = 0; i < CURL_GSKPROTO_LAST; i++)
@@ -458,15 +458,15 @@ static CURLcode init_environment(struct SessionHandle *data,
     return CURLE_SSL_CONNECT_ERROR;
   }
 
-  result = set_enum(data, h, GSK_SESSION_TYPE, GSK_CLIENT_SESSION, FALSE);
+  result = set_enum(data, h, GSK_SESSION_TYPE, GSK_CLIENT_SESSION, false);
   if(!result && appid)
-    result = set_buffer(data, h, GSK_OS400_APPLICATION_ID, appid, FALSE);
+    result = set_buffer(data, h, GSK_OS400_APPLICATION_ID, appid, false);
   if(!result && file)
-    result = set_buffer(data, h, GSK_KEYRING_FILE, file, FALSE);
+    result = set_buffer(data, h, GSK_KEYRING_FILE, file, false);
   if(!result && label)
-    result = set_buffer(data, h, GSK_KEYRING_LABEL, label, FALSE);
+    result = set_buffer(data, h, GSK_KEYRING_LABEL, label, false);
   if(!result && password)
-    result = set_buffer(data, h, GSK_KEYRING_PW, password, FALSE);
+    result = set_buffer(data, h, GSK_KEYRING_PW, password, false);
 
   if(!result) {
     /* Locate CAs, Client certificate and key according to our settings.
@@ -644,7 +644,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   /* Process SNI. Ignore if not supported (on OS400 < V7R1). */
   if(sni) {
     result = set_buffer(data, connssl->handle,
-                        GSK_SSL_EXTN_SERVERNAME_REQUEST, sni, TRUE);
+                        GSK_SSL_EXTN_SERVERNAME_REQUEST, sni, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL)
       result = CURLE_OK;
   }
@@ -653,7 +653,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   if(!result) {
     /* Compute the handshake timeout. Since GSKit granularity is 1 second,
        we round up the required value. */
-    timeout = Curl_timeleft(data, NULL, TRUE);
+    timeout = Curl_timeleft(data, NULL, true);
     if(timeout < 0)
       result = CURLE_OPERATION_TIMEDOUT;
     else
@@ -671,19 +671,19 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   if(!result)
     result = set_enum(data, connssl->handle, GSK_PROTOCOL_SSLV2,
                       (protoflags & CURL_GSKPROTO_SSLV2_MASK)?
-                      GSK_PROTOCOL_SSLV2_ON: GSK_PROTOCOL_SSLV2_OFF, FALSE);
+                      GSK_PROTOCOL_SSLV2_ON: GSK_PROTOCOL_SSLV2_OFF, false);
   if(!result)
     result = set_enum(data, connssl->handle, GSK_PROTOCOL_SSLV3,
                       (protoflags & CURL_GSKPROTO_SSLV3_MASK)?
-                      GSK_PROTOCOL_SSLV3_ON: GSK_PROTOCOL_SSLV3_OFF, FALSE);
+                      GSK_PROTOCOL_SSLV3_ON: GSK_PROTOCOL_SSLV3_OFF, false);
   if(!result)
     result = set_enum(data, connssl->handle, GSK_PROTOCOL_TLSV1,
                       (protoflags & CURL_GSKPROTO_TLSV10_MASK)?
-                      GSK_PROTOCOL_TLSV1_ON: GSK_PROTOCOL_TLSV1_OFF, FALSE);
+                      GSK_PROTOCOL_TLSV1_ON: GSK_PROTOCOL_TLSV1_OFF, false);
   if(!result) {
     result = set_enum(data, connssl->handle, GSK_PROTOCOL_TLSV11,
                       (protoflags & CURL_GSKPROTO_TLSV11_MASK)?
-                      GSK_TRUE: GSK_FALSE, TRUE);
+                      GSK_true: GSK_false, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL) {
       result = CURLE_OK;
       if(protoflags == CURL_GSKPROTO_TLSV11_MASK) {
@@ -695,7 +695,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   if(!result) {
     result = set_enum(data, connssl->handle, GSK_PROTOCOL_TLSV12,
                       (protoflags & CURL_GSKPROTO_TLSV12_MASK)?
-                      GSK_TRUE: GSK_FALSE, TRUE);
+                      GSK_true: GSK_false, true);
     if(result == CURLE_UNSUPPORTED_PROTOCOL) {
       result = CURLE_OK;
       if(protoflags == CURL_GSKPROTO_TLSV12_MASK) {
@@ -707,7 +707,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   if(!result)
     result = set_enum(data, connssl->handle, GSK_SERVER_AUTH_TYPE,
                       data->set.ssl.verifypeer? GSK_SERVER_AUTH_FULL:
-                      GSK_SERVER_AUTH_PASSTHRU, FALSE);
+                      GSK_SERVER_AUTH_PASSTHRU, false);
 
   if(!result) {
     /* Start handshake. Try asynchronous first. */
@@ -760,7 +760,7 @@ static CURLcode gskit_connect_step2(struct connectdata *conn, int sockindex,
   /* Poll or wait for end of SSL asynchronous handshake. */
 
   for(;;) {
-    timeout_ms = nonblocking? 0: Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = nonblocking? 0: Curl_timeleft(data, NULL, true);
     if(timeout_ms < 0)
       timeout_ms = 0;
     stmv.tv_sec = timeout_ms / 1000;
@@ -902,7 +902,7 @@ static CURLcode gskit_connect_common(struct connectdata *conn, int sockindex,
   /* Step 1: create session, start handshake. */
   if(connssl->connecting_state == ssl_connect_1) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -916,7 +916,7 @@ static CURLcode gskit_connect_common(struct connectdata *conn, int sockindex,
   /* Step 2: check if handshake is over. */
   if(!result && connssl->connecting_state == ssl_connect_2) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -938,7 +938,7 @@ static CURLcode gskit_connect_common(struct connectdata *conn, int sockindex,
     connssl->connecting_state = ssl_connect_1;
     conn->recv[sockindex] = gskit_recv;
     conn->send[sockindex] = gskit_send;
-    *done = TRUE;
+    *done = true;
   }
 
   return result;
@@ -951,7 +951,7 @@ CURLcode Curl_gskit_connect_nonblocking(struct connectdata *conn,
 {
   CURLcode result;
 
-  result = gskit_connect_common(conn, sockindex, TRUE, done);
+  result = gskit_connect_common(conn, sockindex, true, done);
   if(*done || result)
     conn->ssl[sockindex].connecting_state = ssl_connect_1;
   return result;
@@ -964,7 +964,7 @@ CURLcode Curl_gskit_connect(struct connectdata *conn, int sockindex)
   bool done;
 
   conn->ssl[sockindex].connecting_state = ssl_connect_1;
-  result = gskit_connect_common(conn, sockindex, FALSE, &done);
+  result = gskit_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 

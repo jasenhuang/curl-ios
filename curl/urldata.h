@@ -258,7 +258,7 @@ typedef enum {
 
 /* struct for data related to each SSL connection */
 struct ssl_connect_data {
-  /* Use ssl encrypted communications TRUE/FALSE, not necessarily using it atm
+  /* Use ssl encrypted communications true/false, not necessarily using it atm
      but at least asked to or meaning to use it. See 'state' for the exact
      current state of the connection. */
   bool use;
@@ -336,9 +336,9 @@ struct ssl_config_data {
   long version;          /* what version the client wants to use */
   long certverifyresult; /* result from the certificate verification */
 
-  bool verifypeer;       /* set TRUE if this is desired */
-  bool verifyhost;       /* set TRUE if CN/SAN must match hostname */
-  bool verifystatus;     /* set TRUE if certificate status must be checked */
+  bool verifypeer;       /* set true if this is desired */
+  bool verifyhost;       /* set true if CN/SAN must match hostname */
+  bool verifystatus;     /* set true if certificate status must be checked */
   char *CApath;          /* certificate dir (doesn't work on windows) */
   char *CAfile;          /* certificate to verify peer against */
   const char *CRLfile;   /* CRL to check certificate revocation */
@@ -486,7 +486,7 @@ struct ConnectBits {
                    IP address */
   bool ipv6;    /* we communicate with a site using an IPv6 address */
 
-  bool do_more; /* this is set TRUE if the ->curl_do_more() function is
+  bool do_more; /* this is set true if the ->curl_do_more() function is
                    supposed to be called, after ->curl_do() */
   bool tcpconnect[2]; /* the TCP layer (or similar) is connected, this is set
                          the first time on the first connect function call */
@@ -499,11 +499,11 @@ struct ConnectBits {
                          This is implicit when SSL-protocols are used through
                          proxies, but can also be enabled explicitly by
                          apps */
-  bool authneg;       /* TRUE when the auth phase has started, which means
+  bool authneg;       /* true when the auth phase has started, which means
                          that we are creating a request with an auth header,
                          but it is not the final request in the auth
                          negotiation. */
-  bool rewindaftersend;/* TRUE when the sending couldn't be stopped even
+  bool rewindaftersend;/* true when the sending couldn't be stopped even
                           though it will be discarded. When the whole send
                           operation is done, we must call the data rewind
                           callback. */
@@ -517,7 +517,7 @@ struct ConnectBits {
   bool netrc;         /* name+password provided by netrc */
   bool userpwd_in_url; /* name+password found in url */
 
-  bool done;          /* set to FALSE when Curl_do() is called and set to TRUE
+  bool done;          /* set to false when Curl_do() is called and set to true
                          when Curl_done() is called, to prevent Curl_done() to
                          get invoked twice when the multi interface is
                          used. */
@@ -572,8 +572,8 @@ struct Curl_async {
   char *hostname;
   int port;
   struct Curl_dns_entry *dns;
-  bool done;  /* set TRUE when the lookup is complete */
-  int status; /* if done is TRUE, this is the status from the callback */
+  bool done;  /* set true when the lookup is complete */
+  int status; /* if done is true, this is the status from the callback */
   void *os_specific;  /* 'struct thread_data' for Windows */
 };
 #endif
@@ -645,7 +645,7 @@ struct SingleRequest {
   char *str_start;              /* within buf */
   char *end_ptr;                /* within buf */
   char *p;                      /* within headerbuff */
-  bool content_range;           /* set TRUE if Content-Range: was found */
+  bool content_range;           /* set true if Content-Range: was found */
   curl_off_t offset;            /* possible resume offset read from the
                                    Content-Range: header */
   int httpcode;                 /* error code from the 'HTTP/1.? XXX' or
@@ -676,7 +676,7 @@ struct SingleRequest {
 
   int keepon;
 
-  bool upload_done; /* set to TRUE when doing chunked transfer-encoding upload
+  bool upload_done; /* set to true when doing chunked transfer-encoding upload
                        and we're uploading the last chunk */
 
   bool ignorebody;  /* we read a response-body but we ignore it! */
@@ -699,9 +699,9 @@ struct SingleRequest {
   char *upload_fromhere;
 
   bool chunk; /* if set, this is a chunked transfer-encoding */
-  bool upload_chunky; /* set TRUE if we are doing chunked transfer-encoding
+  bool upload_chunky; /* set true if we are doing chunked transfer-encoding
                          on upload */
-  bool getheader;     /* TRUE if header parsing is wanted */
+  bool getheader;     /* true if header parsing is wanted */
 
   bool forbidchunk;   /* used only to explicitly forbid chunk-upload for
                          specific upload buffers. See readmoredata() in
@@ -733,7 +733,7 @@ struct Curl_handler {
 
   /* This function *MAY* be set to a protocol-dependent function that is run
    * after the connect() and everything is done, as a step in the connection.
-   * The 'done' pointer points to a bool that should be set to TRUE if the
+   * The 'done' pointer points to a bool that should be set to true if the
    * function completes before return. If it doesn't complete, the caller
    * should call the curl_connecting() function until it is.
    */
@@ -771,7 +771,7 @@ struct Curl_handler {
   /* This function *MAY* be set to a protocol-dependent function that is run
    * by the curl_disconnect(), as a step in the disconnection.  If the handler
    * is called because the connection has been considered dead, dead_connection
-   * is set to TRUE.
+   * is set to true.
    */
   CURLcode (*disconnect)(struct connectdata *, bool dead_connection);
 
@@ -837,7 +837,7 @@ struct connectdata {
   void *closesocket_client;
 
   bool inuse; /* This is a marker for the connection cache logic. If this is
-                 TRUE this handle is being used by an easy handle and cannot
+                 true this handle is being used by an easy handle and cannot
                  be used by any other easy handle without careful
                  consideration (== only for pipelining). */
 
@@ -907,7 +907,7 @@ struct connectdata {
   curl_socket_t sock[2]; /* two sockets, the second is used for the data
                             transfer when doing FTP */
   curl_socket_t tempsock[2]; /* temporary sockets for happy eyeballs */
-  bool sock_accepted[2]; /* TRUE if the socket on this index was created with
+  bool sock_accepted[2]; /* true if the socket on this index was created with
                             accept() */
   Curl_recv *recv[2];
   Curl_send *send[2];
@@ -970,7 +970,7 @@ struct connectdata {
 #endif                        /* however, some of them are ftp specific. */
 
   /* the two following *_inuse fields are only flags, not counters in any way.
-     If TRUE it means the channel is in use, and if FALSE it means the channel
+     If true it means the channel is in use, and if false it means the channel
      is up for grabs by one. */
 
   bool readchannel_inuse;  /* whether the read channel is in use by an easy
@@ -1079,7 +1079,7 @@ struct PureInfo {
                     was unretrievable. We cannot have this of type time_t,
                     since time_t is unsigned on several platforms such as
                     OpenVMS. */
-  bool timecond;  /* set to TRUE if the time condition didn't match, which
+  bool timecond;  /* set to true if the time condition didn't match, which
                      thus made the document NOT get fetched */
   long header_size;  /* size of read header(s) in bytes */
   long request_size; /* the amount of bytes sent in the request(s) */
@@ -1190,11 +1190,11 @@ struct auth {
   unsigned long picked;
   unsigned long avail; /* Bitmask for what the server reports to support for
                           this resource */
-  bool done;  /* TRUE when the auth phase is done and ready to do the *actual*
+  bool done;  /* true when the auth phase is done and ready to do the *actual*
                  request */
-  bool multi; /* TRUE if this is not yet authenticated but within the auth
+  bool multi; /* true if this is not yet authenticated but within the auth
                  multipass negotiation */
-  bool iestyle; /* TRUE if digest should be done IE-style or FALSE if it should
+  bool iestyle; /* true if digest should be done IE-style or false if it should
                    be RFC compliant */
 };
 
@@ -1235,8 +1235,8 @@ struct UrlState {
   int tempwritetype;    /* type of the 'tempwrite' buffer as a bitmask that is
                            used with Curl_client_write() */
   char *scratch; /* huge buffer[BUFSIZE*2] when doing upload CRLF replacing */
-  bool errorbuf; /* Set to TRUE if the error buffer is already filled in.
-                    This must be set to FALSE every time _easy_perform() is
+  bool errorbuf; /* Set to true if the error buffer is already filled in.
+                    This must be set to false every time _easy_perform() is
                     called. */
   int os_errno;  /* filled in with errno whenever an error occurs */
 #ifdef HAVE_SIGNAL
@@ -1244,7 +1244,7 @@ struct UrlState {
   void (*prev_signal)(int sig);
 #endif
   bool allow_port; /* Is set.use_port allowed to take effect or not. This
-                      is always set TRUE when curl_easy_perform() is called. */
+                      is always set true when curl_easy_perform() is called. */
   struct digestdata digest;      /* state data for host Digest auth */
   struct digestdata proxydigest; /* state data for proxy Digest auth */
 
@@ -1256,7 +1256,7 @@ struct UrlState {
   struct auth authhost;  /* auth details for host */
   struct auth authproxy; /* auth details for proxy */
 
-  bool authproblem; /* TRUE if there's some problem authenticating */
+  bool authproblem; /* true if there's some problem authenticating */
 
   void *resolver; /* resolver state, if it is used in the URL state -
                      ares_channel f.e. */
@@ -1276,9 +1276,9 @@ struct UrlState {
 
   int httpversion;       /* the lowest HTTP version*10 reported by any server
                             involved in this request */
-  bool expect100header;  /* TRUE if we added Expect: 100-continue */
+  bool expect100header;  /* true if we added Expect: 100-continue */
 
-  bool pipe_broke; /* TRUE if the connection we were pipelined on broke
+  bool pipe_broke; /* true if the connection we were pipelined on broke
                       and we need to restart from the beginning */
 
 #if !defined(WIN32) && !defined(MSDOS) && !defined(__EMX__) && \
@@ -1293,7 +1293,7 @@ struct UrlState {
   char *pathbuffer;/* allocated buffer to store the URL's path part in */
   char *path;      /* path to use, points to somewhere within the pathbuffer
                       area */
-  bool slash_removed; /* set TRUE if the 'path' points to a path where the
+  bool slash_removed; /* set true if the 'path' points to a path where the
                          initial URL slash separator has been taken off */
   bool use_range;
   bool rangestringalloc; /* the range string is malloc()'ed */
@@ -1434,7 +1434,7 @@ struct UserDefined {
 
   int keep_post;     /* keep POSTs as POSTs after a 30x request; each
                         bit represents a request, from 301 to 303 */
-  bool free_referer; /* set TRUE if 'referer' points to a string we
+  bool free_referer; /* set true if 'referer' points to a string we
                         allocated */
   void *postfields;  /* if POST, set the fields' values here */
   curl_seek_callback seek_func;      /* function that seeks the input */

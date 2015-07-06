@@ -51,7 +51,7 @@ struct pingpong {
   size_t nread_resp;  /* number of bytes currently read of a server response */
   char *linestart_resp; /* line start pointer for the server response
                            reader function */
-  bool pending_resp;  /* set TRUE when a server response is pending or in
+  bool pending_resp;  /* set true when a server response is pending or in
                          progress, and is cleared once the last response is
                          read */
   char *sendthis; /* allocated pointer to a buffer that is to be sent to the

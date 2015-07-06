@@ -1627,7 +1627,7 @@ typedef enum {
   CINIT(SSL_VERIFYSTATUS, LONG, 232),
 
   /* Set if we should enable TLS false start. */
-  CINIT(SSL_FALSESTART, LONG, 233),
+  CINIT(SSL_falseSTART, LONG, 233),
 
   /* Do not squash dot-dot sequences */
   CINIT(PATH_AS_IS, LONG, 234),

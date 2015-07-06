@@ -70,7 +70,7 @@ static int parsekeyword(unsigned char **pattern, unsigned char *charset)
   parsekey_state state = CURLFNM_PKW_INIT;
 #define KEYLEN 10
   char keyword[KEYLEN] = { 0 };
-  int found = FALSE;
+  int found = false;
   int i;
   unsigned char *p = *pattern;
   for(i = 0; !found; i++) {
@@ -88,7 +88,7 @@ static int parsekeyword(unsigned char **pattern, unsigned char *charset)
       break;
     case CURLFNM_PKW_DDOT:
       if(c == ']')
-        found = TRUE;
+        found = true;
       else
         return SETCHARSET_FAIL;
     }
@@ -127,7 +127,7 @@ static int setcharset(unsigned char **p, unsigned char *charset)
   setcharset_state state = CURLFNM_SCHS_DEFAULT;
   unsigned char rangestart = 0;
   unsigned char lastchar   = 0;
-  bool something_found = FALSE;
+  bool something_found = false;
   unsigned char c;
   for(;;) {
     c = **p;
@@ -138,13 +138,13 @@ static int setcharset(unsigned char **p, unsigned char *charset)
         charset[c] = 1;
         (*p)++;
         state = CURLFNM_SCHS_MAYRANGE;
-        something_found = TRUE;
+        something_found = true;
       }
       else if(c == ']') {
         if(something_found)
           return SETCHARSET_OK;
         else
-          something_found = TRUE;
+          something_found = true;
         state = CURLFNM_SCHS_RIGHTBR;
         charset[c] = 1;
         (*p)++;
@@ -163,10 +163,10 @@ static int setcharset(unsigned char **p, unsigned char *charset)
           charset[c] = 1;
           (*p)++;
         }
-        something_found = TRUE;
+        something_found = true;
       }
       else if(c == '?' || c == '*') {
-        something_found = TRUE;
+        something_found = true;
         charset[c] = 1;
         (*p)++;
       }
@@ -174,7 +174,7 @@ static int setcharset(unsigned char **p, unsigned char *charset)
         if(!something_found) {
           if(charset[CURLFNM_NEGATE]) {
             charset[c] = 1;
-            something_found = TRUE;
+            something_found = true;
           }
           else
             charset[CURLFNM_NEGATE] = 1; /* negate charset */
@@ -186,7 +186,7 @@ static int setcharset(unsigned char **p, unsigned char *charset)
       else if(c == '\\') {
         c = *(++(*p));
         if(ISPRINT((c))) {
-          something_found = TRUE;
+          something_found = true;
           state = CURLFNM_SCHS_MAYRANGE;
           charset[c] = 1;
           rangestart = c;
@@ -201,7 +201,7 @@ static int setcharset(unsigned char **p, unsigned char *charset)
       else {
         charset[c] = 1;
         (*p)++;
-        something_found = TRUE;
+        something_found = true;
       }
       break;
     case CURLFNM_SCHS_MAYRANGE:
@@ -353,9 +353,9 @@ static int loop(const unsigned char *pattern, const unsigned char *string)
       else if(*p == '[') {
         unsigned char *pp = p+1; /* cannot handle with pointer to register */
         if(setcharset(&pp, charset)) {
-          int found = FALSE;
+          int found = false;
           if(charset[(unsigned int)*s])
-            found = TRUE;
+            found = true;
           else if(charset[CURLFNM_ALNUM])
             found = ISALNUM(*s);
           else if(charset[CURLFNM_ALPHA])

@@ -53,21 +53,21 @@ bool Curl_amiga_init()
 
   if(!SocketBase) {
     __request("No TCP/IP Stack running!");
-    return FALSE;
+    return false;
   }
 
   if(SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (ULONG) &errno,
                     SBTM_SETVAL(SBTC_LOGTAGPTR), (ULONG) "cURL",
                     TAG_DONE)) {
     __request("SocketBaseTags ERROR");
-    return FALSE;
+    return false;
   }
 
 #ifndef __libnix__
   atexit(Curl_amiga_cleanup);
 #endif
 
-  return TRUE;
+  return true;
 }
 
 #ifdef __libnix__

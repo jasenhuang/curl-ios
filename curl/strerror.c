@@ -803,7 +803,7 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
   char txtbuf[80];
   char msgbuf[sizeof(conn->syserr_buf)];
   char *p, *str, *msg = NULL;
-  bool msg_formatted = FALSE;
+  bool msg_formatted = false;
   int old_errno;
 #endif
   const char *txt;
@@ -1083,7 +1083,7 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
                        NULL, err, LANG_NEUTRAL,
                        wbuf, sizeof(wbuf)/sizeof(wchar_t), NULL)) {
         wcstombs(msgbuf, wbuf, sizeof(msgbuf)-1);
-        msg_formatted = TRUE;
+        msg_formatted = true;
       }
     }
 #else
@@ -1091,7 +1091,7 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
                       FORMAT_MESSAGE_IGNORE_INSERTS,
                       NULL, err, LANG_NEUTRAL,
                       msgbuf, sizeof(msgbuf)-1, NULL)) {
-      msg_formatted = TRUE;
+      msg_formatted = true;
     }
 #endif
     if(msg_formatted) {

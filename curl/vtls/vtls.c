@@ -84,10 +84,10 @@ static bool safe_strequal(char* str1, char* str2)
 {
   if(str1 && str2)
     /* both pointers point to something then compare them */
-    return (0 != Curl_raw_equal(str1, str2)) ? TRUE : FALSE;
+    return (0 != Curl_raw_equal(str1, str2)) ? true : false;
   else
     /* if both pointers are NULL then treat them as equal */
-    return (!str1 && !str2) ? TRUE : FALSE;
+    return (!str1 && !str2) ? true : false;
 }
 
 bool
@@ -102,9 +102,9 @@ Curl_ssl_config_matches(struct ssl_config_data* data,
      safe_strequal(data->random_file, needle->random_file) &&
      safe_strequal(data->egdsocket, needle->egdsocket) &&
      safe_strequal(data->cipher_list, needle->cipher_list))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 bool
@@ -119,7 +119,7 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   if(source->CAfile) {
     dest->CAfile = strdup(source->CAfile);
     if(!dest->CAfile)
-      return FALSE;
+      return false;
   }
   else
     dest->CAfile = NULL;
@@ -127,7 +127,7 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   if(source->CApath) {
     dest->CApath = strdup(source->CApath);
     if(!dest->CApath)
-      return FALSE;
+      return false;
   }
   else
     dest->CApath = NULL;
@@ -135,7 +135,7 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   if(source->cipher_list) {
     dest->cipher_list = strdup(source->cipher_list);
     if(!dest->cipher_list)
-      return FALSE;
+      return false;
   }
   else
     dest->cipher_list = NULL;
@@ -143,7 +143,7 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   if(source->egdsocket) {
     dest->egdsocket = strdup(source->egdsocket);
     if(!dest->egdsocket)
-      return FALSE;
+      return false;
   }
   else
     dest->egdsocket = NULL;
@@ -151,12 +151,12 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   if(source->random_file) {
     dest->random_file = strdup(source->random_file);
     if(!dest->random_file)
-      return FALSE;
+      return false;
   }
   else
     dest->random_file = NULL;
 
-  return TRUE;
+  return true;
 }
 
 void Curl_free_ssl_config(struct ssl_config_data* sslc)
@@ -185,7 +185,7 @@ unsigned int Curl_rand(struct SessionHandle *data)
 {
   unsigned int r = 0;
   static unsigned int randseed;
-  static bool seeded = FALSE;
+  static bool seeded = false;
 
 #ifdef CURLDEBUG
   char *force_entropy = getenv("CURL_ENTROPY");
@@ -195,7 +195,7 @@ unsigned int Curl_rand(struct SessionHandle *data)
       size_t clen = sizeof(randseed);
       size_t min = elen < clen ? elen : clen;
       memcpy((char *)&randseed, force_entropy, min);
-      seeded = TRUE;
+      seeded = true;
     }
     else
       randseed++;
@@ -218,7 +218,7 @@ unsigned int Curl_rand(struct SessionHandle *data)
       /* read random data into the randseed variable */
       ssize_t nread = read(fd, &randseed, sizeof(randseed));
       if(nread == sizeof(randseed))
-        seeded = TRUE;
+        seeded = true;
       close(fd);
     }
   }
@@ -231,7 +231,7 @@ unsigned int Curl_rand(struct SessionHandle *data)
     randseed = randseed * 1103515245 + 12345;
     randseed = randseed * 1103515245 + 12345;
     randseed = randseed * 1103515245 + 12345;
-    seeded = TRUE;
+    seeded = true;
   }
 
   /* Return an unsigned 32-bit pseudo-random number. */
@@ -247,7 +247,7 @@ int Curl_ssl_backend(void)
 #ifdef USE_SSL
 
 /* "global" init done? */
-static bool init_ssl=FALSE;
+static bool init_ssl=false;
 
 /**
  * Global SSL init
@@ -260,7 +260,7 @@ int Curl_ssl_init(void)
   /* make sure this is only done once */
   if(init_ssl)
     return 1;
-  init_ssl = TRUE; /* never again */
+  init_ssl = true; /* never again */
 
   return curlssl_init();
 }
@@ -272,7 +272,7 @@ void Curl_ssl_cleanup(void)
   if(init_ssl) {
     /* only cleanup if we did a previous init */
     curlssl_cleanup();
-    init_ssl = FALSE;
+    init_ssl = false;
   }
 }
 
@@ -282,9 +282,9 @@ static bool ssl_prefs_check(struct SessionHandle *data)
   if((data->set.ssl.version < 0)
      || (data->set.ssl.version >= CURL_SSLVERSION_LAST)) {
     failf(data, "Unrecognized parameter value passed via CURLOPT_SSLVERSION");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 CURLcode
@@ -296,7 +296,7 @@ Curl_ssl_connect(struct connectdata *conn, int sockindex)
     return CURLE_SSL_CONNECT_ERROR;
 
   /* mark this is being ssl-enabled from here on. */
-  conn->ssl[sockindex].use = TRUE;
+  conn->ssl[sockindex].use = true;
   conn->ssl[sockindex].state = ssl_connection_negotiating;
 
   result = curlssl_connect(conn, sockindex);
@@ -317,11 +317,11 @@ Curl_ssl_connect_nonblocking(struct connectdata *conn, int sockindex,
     return CURLE_SSL_CONNECT_ERROR;
 
   /* mark this is being ssl requested from here on. */
-  conn->ssl[sockindex].use = TRUE;
+  conn->ssl[sockindex].use = true;
 #ifdef curlssl_connect_nonblocking
   result = curlssl_connect_nonblocking(conn, sockindex, done);
 #else
-  *done = TRUE; /* fallback to BLOCKING */
+  *done = true; /* fallback to BLOCKING */
   result = curlssl_connect(conn, sockindex);
 #endif /* non-blocking connect support */
   if(!result && *done)
@@ -331,7 +331,7 @@ Curl_ssl_connect_nonblocking(struct connectdata *conn, int sockindex,
 
 /*
  * Check if there's a session ID for the given connection in the cache, and if
- * there's one suitable, it is provided. Returns TRUE when no entry matched.
+ * there's one suitable, it is provided. Returns true when no entry matched.
  */
 bool Curl_ssl_getsessionid(struct connectdata *conn,
                            void **ssl_sessionid,
@@ -341,13 +341,13 @@ bool Curl_ssl_getsessionid(struct connectdata *conn,
   struct SessionHandle *data = conn->data;
   size_t i;
   long *general_age;
-  bool no_match = TRUE;
+  bool no_match = true;
 
   *ssl_sessionid = NULL;
 
   if(!conn->ssl_config.sessionid)
     /* session ID re-use is disabled */
-    return TRUE;
+    return true;
 
   /* Lock if shared */
   if(SSLSESSION_SHARED(data)) {
@@ -371,7 +371,7 @@ bool Curl_ssl_getsessionid(struct connectdata *conn,
       *ssl_sessionid = check->sessionid;
       if(idsize)
         *idsize = check->idsize;
-      no_match = FALSE;
+      no_match = false;
       break;
     }
   }
@@ -529,7 +529,7 @@ CURLcode Curl_ssl_shutdown(struct connectdata *conn, int sockindex)
   if(curlssl_shutdown(conn, sockindex))
     return CURLE_SSL_SHUTDOWN_FAILED;
 
-  conn->ssl[sockindex].use = FALSE; /* get back to ordinary socket usage */
+  conn->ssl[sockindex].use = false; /* get back to ordinary socket usage */
   conn->ssl[sockindex].state = ssl_connection_none;
 
   conn->recv[sockindex] = Curl_recv_plain;
@@ -877,7 +877,7 @@ bool Curl_ssl_cert_status_request(void)
 #ifdef curlssl_cert_status_request
   return curlssl_cert_status_request();
 #else
-  return FALSE;
+  return false;
 #endif
 }
 
@@ -889,7 +889,7 @@ bool Curl_ssl_false_start(void)
 #ifdef curlssl_false_start
   return curlssl_false_start();
 #else
-  return FALSE;
+  return false;
 #endif
 }
 

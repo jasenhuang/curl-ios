@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55D516101AFB7022000E0397 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E05DDA1AF8E7BD00B3D3CD /* libz.dylib */; };
 		55E05B8B1AF8E5B200B3D3CD /* curl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E05B7F1AF8E5B200B3D3CD /* curl.framework */; };
 		55E05B921AF8E5B200B3D3CD /* curlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E05B911AF8E5B200B3D3CD /* curlTests.m */; };
 		55E05CB21AF8E5FD00B3D3CD /* amigaos.c in Sources */ = {isa = PBXBuildFile; fileRef = 55E05B9B1AF8E5FC00B3D3CD /* amigaos.c */; };
@@ -522,6 +523,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55D516101AFB7022000E0397 /* libz.dylib in Frameworks */,
 				55E05B8B1AF8E5B200B3D3CD /* curl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,6 +560,7 @@
 				55E05DCB1AF8E6C400B3D3CD /* curlrules.h */,
 				55E05DCC1AF8E6C400B3D3CD /* curlver.h */,
 				55E05DCD1AF8E6C400B3D3CD /* easy.h */,
+				55E05BEC1AF8E5FC00B3D3CD /* easy.c */,
 				55E05DCF1AF8E6C400B3D3CD /* multi.h */,
 				55E05B9B1AF8E5FC00B3D3CD /* amigaos.c */,
 				55E05B9C1AF8E5FC00B3D3CD /* amigaos.h */,
@@ -565,7 +568,6 @@
 				55E05B9E1AF8E5FC00B3D3CD /* asyn-ares.c */,
 				55E05B9F1AF8E5FC00B3D3CD /* asyn-thread.c */,
 				55E05BA01AF8E5FC00B3D3CD /* asyn.h */,
-				55E05BA11AF8E5FC00B3D3CD /* base64.c */,
 				55E05BA21AF8E5FC00B3D3CD /* bundles.c */,
 				55E05BA31AF8E5FC00B3D3CD /* bundles.h */,
 				55E05BB11AF8E5FC00B3D3CD /* conncache.c */,
@@ -578,9 +580,6 @@
 				55E05BB81AF8E5FC00B3D3CD /* cookie.h */,
 				55E05BB91AF8E5FC00B3D3CD /* curl_addrinfo.c */,
 				55E05BBA1AF8E5FC00B3D3CD /* curl_addrinfo.h */,
-				55E05BBB1AF8E5FC00B3D3CD /* curl_base64.h */,
-				55E05BBE1AF8E5FC00B3D3CD /* curl_des.c */,
-				55E05BBF1AF8E5FC00B3D3CD /* curl_des.h */,
 				55E05BC01AF8E5FC00B3D3CD /* curl_endian.c */,
 				55E05BC11AF8E5FC00B3D3CD /* curl_endian.h */,
 				55E05BC21AF8E5FC00B3D3CD /* curl_fnmatch.c */,
@@ -591,8 +590,6 @@
 				55E05BC71AF8E5FC00B3D3CD /* curl_gssapi.h */,
 				55E05BC81AF8E5FC00B3D3CD /* curl_hmac.h */,
 				55E05BC91AF8E5FC00B3D3CD /* curl_ldap.h */,
-				55E05BCA1AF8E5FC00B3D3CD /* curl_md4.h */,
-				55E05BCB1AF8E5FC00B3D3CD /* curl_md5.h */,
 				55E05BCC1AF8E5FC00B3D3CD /* curl_memory.h */,
 				55E05BCD1AF8E5FC00B3D3CD /* curl_memrchr.c */,
 				55E05BCE1AF8E5FC00B3D3CD /* curl_memrchr.h */,
@@ -606,7 +603,6 @@
 				55E05BD61AF8E5FC00B3D3CD /* curl_ntlm_wb.h */,
 				55E05BD71AF8E5FC00B3D3CD /* curl_ntlm.c */,
 				55E05BD81AF8E5FC00B3D3CD /* curl_ntlm.h */,
-				55E05BD91AF8E5FC00B3D3CD /* curl_printf.h */,
 				55E05BDA1AF8E5FC00B3D3CD /* curl_rtmp.c */,
 				55E05BDB1AF8E5FC00B3D3CD /* curl_rtmp.h */,
 				55E05BDC1AF8E5FC00B3D3CD /* curl_sasl_gssapi.c */,
@@ -621,11 +617,8 @@
 				55E05BE51AF8E5FC00B3D3CD /* curl_threads.c */,
 				55E05BE61AF8E5FC00B3D3CD /* curl_threads.h */,
 				55E05BE71AF8E5FC00B3D3CD /* curlx.h */,
-				55E05BE81AF8E5FC00B3D3CD /* dict.c */,
-				55E05BE91AF8E5FC00B3D3CD /* dict.h */,
 				55E05BEA1AF8E5FC00B3D3CD /* dotdot.c */,
 				55E05BEB1AF8E5FC00B3D3CD /* dotdot.h */,
-				55E05BEC1AF8E5FC00B3D3CD /* easy.c */,
 				55E05BED1AF8E5FC00B3D3CD /* easyif.h */,
 				55E05BEE1AF8E5FC00B3D3CD /* escape.c */,
 				55E05BEF1AF8E5FC00B3D3CD /* escape.h */,
@@ -644,8 +637,6 @@
 				55E05BFD1AF8E5FC00B3D3CD /* getinfo.h */,
 				55E05BFE1AF8E5FC00B3D3CD /* gopher.c */,
 				55E05BFF1AF8E5FC00B3D3CD /* gopher.h */,
-				55E05C001AF8E5FC00B3D3CD /* hash.c */,
-				55E05C011AF8E5FC00B3D3CD /* hash.h */,
 				55E05C021AF8E5FC00B3D3CD /* hmac.c */,
 				55E05C031AF8E5FC00B3D3CD /* hostasyn.c */,
 				55E05C041AF8E5FC00B3D3CD /* hostcheck.c */,
@@ -681,8 +672,6 @@
 				55E05C221AF8E5FC00B3D3CD /* ldap.c */,
 				55E05C261AF8E5FC00B3D3CD /* llist.c */,
 				55E05C271AF8E5FC00B3D3CD /* llist.h */,
-				55E05C361AF8E5FC00B3D3CD /* md4.c */,
-				55E05C371AF8E5FC00B3D3CD /* md5.c */,
 				55E05C381AF8E5FC00B3D3CD /* memdebug.c */,
 				55E05C391AF8E5FC00B3D3CD /* memdebug.h */,
 				55E05C3D1AF8E5FC00B3D3CD /* multi.c */,
@@ -838,8 +827,21 @@
 			isa = PBXGroup;
 			children = (
 				55E05DD01AF8E6C400B3D3CD /* stdcheaders.h */,
+				55E05BD91AF8E5FC00B3D3CD /* curl_printf.h */,
 				55E05DCE1AF8E6C400B3D3CD /* mprintf.h */,
 				55E05C3C1AF8E5FC00B3D3CD /* mprintf.c */,
+				55E05BBB1AF8E5FC00B3D3CD /* curl_base64.h */,
+				55E05BA11AF8E5FC00B3D3CD /* base64.c */,
+				55E05BCA1AF8E5FC00B3D3CD /* curl_md4.h */,
+				55E05C361AF8E5FC00B3D3CD /* md4.c */,
+				55E05BCB1AF8E5FC00B3D3CD /* curl_md5.h */,
+				55E05C371AF8E5FC00B3D3CD /* md5.c */,
+				55E05C011AF8E5FC00B3D3CD /* hash.h */,
+				55E05C001AF8E5FC00B3D3CD /* hash.c */,
+				55E05BE91AF8E5FC00B3D3CD /* dict.h */,
+				55E05BE81AF8E5FC00B3D3CD /* dict.c */,
+				55E05BBF1AF8E5FC00B3D3CD /* curl_des.h */,
+				55E05BBE1AF8E5FC00B3D3CD /* curl_des.c */,
 			);
 			name = utils;
 			sourceTree = "<group>";
@@ -1020,7 +1022,7 @@
 		55E05B761AF8E5B200B3D3CD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = jasenhuang;
 				TargetAttributes = {
 					55E05B7E1AF8E5B200B3D3CD = {
@@ -1233,6 +1235,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1309,6 +1312,7 @@
 				INFOPLIST_FILE = curl/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1324,6 +1328,7 @@
 				INFOPLIST_FILE = curl/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1342,6 +1347,7 @@
 				);
 				INFOPLIST_FILE = curlTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1355,6 +1361,7 @@
 				);
 				INFOPLIST_FILE = curlTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1378,6 +1385,7 @@
 				55E05B971AF8E5B200B3D3CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		55E05B981AF8E5B200B3D3CD /* Build configuration list for PBXNativeTarget "curlTests" */ = {
 			isa = XCConfigurationList;
@@ -1386,6 +1394,7 @@
 				55E05B9A1AF8E5B200B3D3CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

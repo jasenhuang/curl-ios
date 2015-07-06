@@ -242,18 +242,18 @@ static bool smtp_endofresp(struct connectdata *conn, char *line, size_t len,
                            int *resp)
 {
   struct smtp_conn *smtpc = &conn->proto.smtpc;
-  bool result = FALSE;
+  bool result = false;
 
   /* Nothing for us */
   if(len < 4 || !ISDIGIT(line[0]) || !ISDIGIT(line[1]) || !ISDIGIT(line[2]))
-    return FALSE;
+    return false;
 
   /* Do we have a command response? This should be the response code followed
      by a space and optionally some text as per RFC-5321 and as outlined in
      Section 4. Examples of RFC-4954 but some e-mail servers ignore this and
      only send the response code instead as per Section 4.2. */
   if(line[3] == ' ' || len == 5) {
-    result = TRUE;
+    result = true;
     *resp = curlx_sltosi(strtol(line, NULL, 10));
 
     /* Make sure real server never sends internal value */
@@ -263,7 +263,7 @@ static bool smtp_endofresp(struct connectdata *conn, char *line, size_t len,
   /* Do we have a multiline (continuation) response? */
   else if(line[3] == '-' &&
           (smtpc->state == SMTP_EHLO || smtpc->state == SMTP_COMMAND)) {
-    result = TRUE;
+    result = true;
     *resp = 1;  /* Internal response code */
   }
 
@@ -350,8 +350,8 @@ static CURLcode smtp_perform_ehlo(struct connectdata *conn)
   smtpc->sasl.authmechs = SASL_AUTH_NONE; /* No known auth. mechanism yet */
   smtpc->sasl.authused = SASL_AUTH_NONE;  /* Clear the authentication mechanism
                                              used for esmtp connections */
-  smtpc->tls_supported = FALSE;           /* Clear the TLS capability */
-  smtpc->auth_supported = FALSE;          /* Clear the AUTH capability */
+  smtpc->tls_supported = false;           /* Clear the TLS capability */
+  smtpc->auth_supported = false;          /* Clear the AUTH capability */
 
   /* Send the EHLO command */
   result = Curl_pp_sendf(&smtpc->pp, "EHLO %s", smtpc->domain);
@@ -492,7 +492,7 @@ static CURLcode smtp_perform_authentication(struct connectdata *conn)
   }
 
   /* Calculate the SASL login details */
-  result = Curl_sasl_start(&smtpc->sasl, conn, FALSE, &progress);
+  result = Curl_sasl_start(&smtpc->sasl, conn, false, &progress);
 
   if(!result) {
     if(progress == SASL_INPROGRESS)
@@ -729,15 +729,15 @@ static CURLcode smtp_state_ehlo_resp(struct connectdata *conn, int smtpcode,
 
     /* Does the server support the STARTTLS capability? */
     if(len >= 8 && !memcmp(line, "STARTTLS", 8))
-      smtpc->tls_supported = TRUE;
+      smtpc->tls_supported = true;
 
     /* Does the server support the SIZE capability? */
     else if(len >= 4 && !memcmp(line, "SIZE", 4))
-      smtpc->size_supported = TRUE;
+      smtpc->size_supported = true;
 
     /* Does the server support authentication? */
     else if(len >= 5 && !memcmp(line, "AUTH ", 5)) {
-      smtpc->auth_supported = TRUE;
+      smtpc->auth_supported = true;
 
       /* Advance past the AUTH keyword */
       line += 5;
@@ -962,7 +962,7 @@ static CURLcode smtp_state_data_resp(struct connectdata *conn, int smtpcode,
     Curl_pgrsSetUploadSize(data, data->state.infilesize);
 
     /* SMTP upload */
-    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
+    Curl_setup_transfer(conn, -1, -1, false, NULL, FIRSTSOCKET, NULL);
 
     /* End of DO phase */
     state(conn, SMTP_STOP);
@@ -1087,8 +1087,8 @@ static CURLcode smtp_multi_statemach(struct connectdata *conn, bool *done)
       return result;
   }
 
-  result = Curl_pp_statemach(&smtpc->pp, FALSE);
-  *done = (smtpc->state == SMTP_STOP) ? TRUE : FALSE;
+  result = Curl_pp_statemach(&smtpc->pp, false);
+  *done = (smtpc->state == SMTP_STOP) ? true : false;
 
   return result;
 }
@@ -1099,7 +1099,7 @@ static CURLcode smtp_block_statemach(struct connectdata *conn)
   struct smtp_conn *smtpc = &conn->proto.smtpc;
 
   while(smtpc->state != SMTP_STOP && !result)
-    result = Curl_pp_statemach(&smtpc->pp, TRUE);
+    result = Curl_pp_statemach(&smtpc->pp, true);
 
   return result;
 }
@@ -1133,8 +1133,8 @@ static int smtp_getsock(struct connectdata *conn, curl_socket_t *socks,
  * This function should do everything that is to be considered a part of
  * the connection phase.
  *
- * The variable pointed to by 'done' will be TRUE if the protocol-layer
- * connect phase is done when this function returns, or FALSE if not.
+ * The variable pointed to by 'done' will be true if the protocol-layer
+ * connect phase is done when this function returns, or false if not.
  */
 static CURLcode smtp_connect(struct connectdata *conn, bool *done)
 {
@@ -1142,7 +1142,7 @@ static CURLcode smtp_connect(struct connectdata *conn, bool *done)
   struct smtp_conn *smtpc = &conn->proto.smtpc;
   struct pingpong *pp = &smtpc->pp;
 
-  *done = FALSE; /* default to not done yet */
+  *done = false; /* default to not done yet */
 
   /* We always support persistent connections in SMTP */
   connkeep(conn, "SMTP default");
@@ -1295,7 +1295,7 @@ static CURLcode smtp_perform(struct connectdata *conn, bool *connected,
     smtp->transfer = FTPTRANSFER_INFO;
   }
 
-  *dophase_done = FALSE; /* not done yet */
+  *dophase_done = false; /* not done yet */
 
   /* Store the first recipient (or NULL if not specified) */
   smtp->rcpt = data->set.mail_rcpt;
@@ -1335,7 +1335,7 @@ static CURLcode smtp_do(struct connectdata *conn, bool *done)
 {
   CURLcode result = CURLE_OK;
 
-  *done = FALSE; /* default to false */
+  *done = false; /* default to false */
 
   /* Parse the custom request */
   result = smtp_parse_custom_request(conn);
@@ -1389,7 +1389,7 @@ static CURLcode smtp_dophase_done(struct connectdata *conn, bool connected)
 
   if(smtp->transfer != FTPTRANSFER_BODY)
     /* no data to transfer */
-    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+    Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
 
   return CURLE_OK;
 }
@@ -1402,7 +1402,7 @@ static CURLcode smtp_doing(struct connectdata *conn, bool *dophase_done)
   if(result)
     DEBUGF(infof(conn->data, "DO phase failed\n"));
   else if(*dophase_done) {
-    result = smtp_dophase_done(conn, FALSE /* not connected */);
+    result = smtp_dophase_done(conn, false /* not connected */);
 
     DEBUGF(infof(conn->data, "DO phase is complete\n"));
   }
@@ -1423,7 +1423,7 @@ static CURLcode smtp_regular_transfer(struct connectdata *conn,
                                       bool *dophase_done)
 {
   CURLcode result = CURLE_OK;
-  bool connected = FALSE;
+  bool connected = false;
   struct SessionHandle *data = conn->data;
 
   /* Make sure size is unknown at this point */
@@ -1495,7 +1495,7 @@ static CURLcode smtp_parse_url_options(struct connectdata *conn)
   struct smtp_conn *smtpc = &conn->proto.smtpc;
   const char *ptr = conn->options;
 
-  smtpc->sasl.resetprefs = TRUE;
+  smtpc->sasl.resetprefs = true;
 
   while(!result && ptr && *ptr) {
     const char *key = ptr;
@@ -1545,7 +1545,7 @@ static CURLcode smtp_parse_url_path(struct connectdata *conn)
   }
 
   /* URL decode the path and use it as the domain in our EHLO */
-  return Curl_urldecode(conn->data, path, 0, &smtpc->domain, NULL, TRUE);
+  return Curl_urldecode(conn->data, path, 0, &smtpc->domain, NULL, true);
 }
 
 /***********************************************************************
@@ -1563,7 +1563,7 @@ static CURLcode smtp_parse_custom_request(struct connectdata *conn)
 
   /* URL decode the custom request */
   if(custom)
-    result = Curl_urldecode(data, custom, 0, &smtp->custom, NULL, TRUE);
+    result = Curl_urldecode(data, custom, 0, &smtp->custom, NULL, true);
 
   return result;
 }
@@ -1608,9 +1608,9 @@ CURLcode Curl_smtp_escape_eob(struct connectdata *conn, const ssize_t nread)
 
       /* Is the EOB potentially the terminating CRLF? */
       if(2 == smtp->eob || SMTP_EOB_LEN == smtp->eob)
-        smtp->trailing_crlf = TRUE;
+        smtp->trailing_crlf = true;
       else
-        smtp->trailing_crlf = FALSE;
+        smtp->trailing_crlf = false;
     }
     else if(smtp->eob) {
       /* A previous substring matched so output that first */
@@ -1626,7 +1626,7 @@ CURLcode Curl_smtp_escape_eob(struct connectdata *conn, const ssize_t nread)
       eob_sent = 0;
 
       /* Reset the trailing CRLF flag as there was more data */
-      smtp->trailing_crlf = FALSE;
+      smtp->trailing_crlf = false;
     }
 
     /* Do we have a match for CRLF. as per RFC-5321, sect. 4.5.2 */

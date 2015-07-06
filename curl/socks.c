@@ -61,7 +61,7 @@ int Curl_blockread_all(struct connectdata *conn, /* connection data */
   long timeleft;
   *n = 0;
   for(;;) {
-    timeleft = Curl_timeleft(conn->data, NULL, TRUE);
+    timeleft = Curl_timeleft(conn->data, NULL, true);
     if(timeleft < 0) {
       /* we already got the timeout */
       result = CURLE_OPERATION_TIMEDOUT;
@@ -103,7 +103,7 @@ int Curl_blockread_all(struct connectdata *conn, /* connection data */
 *   http://socks.permeo.com/protocol/socks4.protocol
 *
 * Note :
-*   Set protocol4a=true for  "SOCKS 4A (Simple Extension to SOCKS 4 Protocol)"
+*   Set protocol4a= true for  "SOCKS 4A (Simple Extension to SOCKS 4 Protocol)"
 *   Nonsupport "Identification Protocol (RFC1413)"
 */
 CURLcode Curl_SOCKS4(const char *proxy_name,
@@ -121,13 +121,13 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
   curl_socket_t sock = conn->sock[sockindex];
   struct SessionHandle *data = conn->data;
 
-  if(Curl_timeleft(data, NULL, TRUE) < 0) {
+  if(Curl_timeleft(data, NULL, true) < 0) {
     /* time-out, bail out, go home */
     failf(data, "Connection time-out");
     return CURLE_OPERATION_TIMEDOUT;
   }
 
-  (void)curlx_nonblock(sock, FALSE);
+  (void)curlx_nonblock(sock, false);
 
   infof(data, "SOCKS4 communication to %s:%d\n", hostname, remote_port);
 
@@ -335,7 +335,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
     }
   }
 
-  (void)curlx_nonblock(sock, TRUE);
+  (void)curlx_nonblock(sock, true);
 
   return CURLE_OK; /* Proxy was successful! */
 }
@@ -376,7 +376,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   curl_socket_t sock = conn->sock[sockindex];
   struct SessionHandle *data = conn->data;
   long timeout;
-  bool socks5_resolve_local = (conn->proxytype == CURLPROXY_SOCKS5)?TRUE:FALSE;
+  bool socks5_resolve_local = (conn->proxytype == CURLPROXY_SOCKS5)?true:false;
   const size_t hostname_len = strlen(hostname);
   ssize_t len = 0;
 
@@ -384,11 +384,11 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   if(!socks5_resolve_local && hostname_len > 255) {
     infof(conn->data, "SOCKS5: server resolving disabled for hostnames of "
           "length > 255 [actual len=%zu]\n", hostname_len);
-    socks5_resolve_local = TRUE;
+    socks5_resolve_local = true;
   }
 
   /* get timeout */
-  timeout = Curl_timeleft(data, NULL, TRUE);
+  timeout = Curl_timeleft(data, NULL, true);
 
   if(timeout < 0) {
     /* time-out, bail out, go home */
@@ -396,7 +396,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
     return CURLE_OPERATION_TIMEDOUT;
   }
 
-  (void)curlx_nonblock(sock, TRUE);
+  (void)curlx_nonblock(sock, true);
 
   /* wait until socket gets connected */
   result = Curl_socket_ready(CURL_SOCKET_BAD, sock, timeout);
@@ -427,7 +427,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   socksreq[3] = 2; /* username/password */
 #endif
 
-  (void)curlx_nonblock(sock, FALSE);
+  (void)curlx_nonblock(sock, false);
 
   code = Curl_write_plain(conn, sock, (char *)socksreq, (2 + (int)socksreq[1]),
                           &written);
@@ -436,7 +436,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
     return CURLE_COULDNT_CONNECT;
   }
 
-  (void)curlx_nonblock(sock, TRUE);
+  (void)curlx_nonblock(sock, true);
 
   result = Curl_socket_ready(sock, CURL_SOCKET_BAD, timeout);
 
@@ -454,7 +454,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
     return CURLE_RECV_ERROR;
   }
 
-  (void)curlx_nonblock(sock, FALSE);
+  (void)curlx_nonblock(sock, false);
 
   result=Curl_blockread_all(conn, sock, (char *)socksreq, 2, &actualread);
   if(result || (actualread != 2)) {
@@ -747,7 +747,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   }
 #endif
 
-  (void)curlx_nonblock(sock, TRUE);
+  (void)curlx_nonblock(sock, true);
   return CURLE_OK; /* Proxy was successful! */
 }
 

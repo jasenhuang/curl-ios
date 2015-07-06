@@ -73,7 +73,7 @@ struct CookieInfo {
 struct SessionHandle;
 /*
  * Add a cookie to the internal list of cookies. The domain and path arguments
- * are only used if the header boolean is TRUE.
+ * are only used if the header boolean is true.
  */
 
 struct Cookie *Curl_cookie_add(struct SessionHandle *data,

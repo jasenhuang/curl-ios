@@ -279,7 +279,7 @@ int Curl_pgrsUpdate(struct connectdata *conn)
   curl_off_t ulestimate=0;
   curl_off_t dlestimate=0;
   curl_off_t total_estimate;
-  bool shownow=FALSE;
+  bool shownow=false;
 
   now = Curl_tvnow(); /* what time is it */
 
@@ -301,7 +301,7 @@ int Curl_pgrsUpdate(struct connectdata *conn)
 
   /* Calculations done at most once a second, unless end is reached */
   if(data->progress.lastshow != (long)now.tv_sec) {
-    shownow = TRUE;
+    shownow = true;
 
     data->progress.lastshow = now.tv_sec;
 

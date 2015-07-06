@@ -145,7 +145,7 @@ CURLcode Curl_output_ntlm(struct connectdata *conn, bool proxy)
     ntlm = &conn->ntlm;
     authp = &conn->data->state.authhost;
   }
-  authp->done = FALSE;
+  authp->done = false;
 
   /* not set means empty */
   if(!userp)
@@ -204,7 +204,7 @@ CURLcode Curl_output_ntlm(struct connectdata *conn, bool proxy)
       DEBUG_OUT(fprintf(stderr, "**** %s\n ", *allocuserpwd));
 
       ntlm->state = NTLMSTATE_TYPE3; /* we send a type-3 */
-      authp->done = TRUE;
+      authp->done = true;
     }
     break;
 
@@ -212,7 +212,7 @@ CURLcode Curl_output_ntlm(struct connectdata *conn, bool proxy)
     /* connection is already authenticated,
      * don't send a header in future requests */
     Curl_safefree(*allocuserpwd);
-    authp->done = TRUE;
+    authp->done = true;
     break;
   }
 

@@ -269,10 +269,10 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
   struct curl_forms *forms = NULL;
   char *array_value=NULL; /* value read from an array */
 
-  /* This is a state variable, that if TRUE means that we're parsing an
-     array that we got passed to us. If FALSE we're parsing the input
+  /* This is a state variable, that if true means that we're parsing an
+     array that we got passed to us. If false we're parsing the input
      va_list arguments. */
-  bool array_state = FALSE;
+  bool array_state = false;
 
   /*
    * We need to allocate the first struct to fill in.
@@ -297,7 +297,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
       forms++; /* advance this to next entry */
       if(CURLFORM_END == option) {
         /* end of array state */
-        array_state = FALSE;
+        array_state = false;
         continue;
       }
     }
@@ -316,7 +316,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
       else {
         forms = va_arg(params, struct curl_forms *);
         if(forms)
-          array_state = TRUE;
+          array_state = true;
         else
           return_value = CURL_FORMADD_NULL;
       }
@@ -392,7 +392,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
             return_value = CURL_FORMADD_MEMORY;
           else {
             current_form->flags |= HTTPPOST_READFILE;
-            current_form->value_alloc = TRUE;
+            current_form->value_alloc = true;
           }
         }
         else
@@ -419,7 +419,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
                   return_value = CURL_FORMADD_MEMORY;
                 }
                 else {
-                  form->value_alloc = TRUE;
+                  form->value_alloc = true;
                   current_form = form;
                   form = NULL;
                 }
@@ -438,7 +438,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
               return_value = CURL_FORMADD_MEMORY;
             else {
               current_form->flags |= HTTPPOST_FILENAME;
-              current_form->value_alloc = TRUE;
+              current_form->value_alloc = true;
             }
           }
           else
@@ -508,7 +508,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
                   return_value = CURL_FORMADD_MEMORY;
                 }
                 else {
-                  form->contenttype_alloc = TRUE;
+                  form->contenttype_alloc = true;
                   current_form = form;
                   form = NULL;
                 }
@@ -526,7 +526,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
             if(!current_form->contenttype)
               return_value = CURL_FORMADD_MEMORY;
             else
-              current_form->contenttype_alloc = TRUE;
+              current_form->contenttype_alloc = true;
           }
           else
             return_value = CURL_FORMADD_NULL;
@@ -560,7 +560,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
           if(!current_form->showfilename)
             return_value = CURL_FORMADD_MEMORY;
           else
-            current_form->showfilename_alloc = TRUE;
+            current_form->showfilename_alloc = true;
         }
         break;
       }
@@ -577,19 +577,19 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
     for(ptr = first_form; ptr != NULL; ptr = ptr->more) {
       if(ptr->name_alloc) {
         Curl_safefree(ptr->name);
-        ptr->name_alloc = FALSE;
+        ptr->name_alloc = false;
       }
       if(ptr->value_alloc) {
         Curl_safefree(ptr->value);
-        ptr->value_alloc = FALSE;
+        ptr->value_alloc = false;
       }
       if(ptr->contenttype_alloc) {
         Curl_safefree(ptr->contenttype);
-        ptr->contenttype_alloc = FALSE;
+        ptr->contenttype_alloc = false;
       }
       if(ptr->showfilename_alloc) {
         Curl_safefree(ptr->showfilename);
-        ptr->showfilename_alloc = FALSE;
+        ptr->showfilename_alloc = false;
       }
     }
   }
@@ -631,7 +631,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
             return_value = CURL_FORMADD_MEMORY;
             break;
           }
-          form->contenttype_alloc = TRUE;
+          form->contenttype_alloc = true;
         }
         if(!(form->flags & HTTPPOST_PTRNAME) &&
            (form == first_form) ) {
@@ -647,7 +647,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
             return_value = CURL_FORMADD_MEMORY;
             break;
           }
-          form->name_alloc = TRUE;
+          form->name_alloc = true;
         }
         if(!(form->flags & (HTTPPOST_FILENAME | HTTPPOST_READFILE |
                             HTTPPOST_PTRCONTENTS | HTTPPOST_PTRBUFFER |
@@ -660,7 +660,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
             return_value = CURL_FORMADD_MEMORY;
             break;
           }
-          form->value_alloc = TRUE;
+          form->value_alloc = true;
         }
         post = AddHttpPost(form->name, form->namelength,
                            form->value, form->contentslength,
@@ -688,19 +688,19 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
       for(ptr = form; ptr != NULL; ptr = ptr->more) {
         if(ptr->name_alloc) {
           Curl_safefree(ptr->name);
-          ptr->name_alloc = FALSE;
+          ptr->name_alloc = false;
         }
         if(ptr->value_alloc) {
           Curl_safefree(ptr->value);
-          ptr->value_alloc = FALSE;
+          ptr->value_alloc = false;
         }
         if(ptr->contenttype_alloc) {
           Curl_safefree(ptr->contenttype);
-          ptr->contenttype_alloc = FALSE;
+          ptr->contenttype_alloc = false;
         }
         if(ptr->showfilename_alloc) {
           Curl_safefree(ptr->showfilename);
-          ptr->showfilename_alloc = FALSE;
+          ptr->showfilename_alloc = false;
         }
       }
     }
@@ -1404,7 +1404,7 @@ static size_t readfromfile(struct Form *form, char *buffer,
                            size_t size)
 {
   size_t nread;
-  bool callback = (form->data->type == FORM_CALLBACK)?TRUE:FALSE;
+  bool callback = (form->data->type == FORM_CALLBACK)?true:false;
 
   if(callback) {
     if(form->fread_func == ZERO_NULL)

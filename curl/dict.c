@@ -139,7 +139,7 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
   char *path = data->state.path;
   curl_off_t *bytecount = &data->req.bytecount;
 
-  *done = TRUE; /* unconditionally */
+  *done = true; /* unconditionally */
 
   if(conn->bits.user_passwd) {
     /* AUTH is missing */
@@ -200,7 +200,7 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
       failf(data, "Failed sending DICT request");
       return result;
     }
-    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, bytecount,
+    Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, bytecount,
                         -1, NULL); /* no upload */
   }
   else if(Curl_raw_nequal(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
@@ -247,7 +247,7 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
       failf(data, "Failed sending DICT request");
       return result;
     }
-    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, bytecount,
+    Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, bytecount,
                         -1, NULL); /* no upload */
   }
   else {
@@ -270,7 +270,7 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
         return result;
       }
 
-      Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, bytecount, -1, NULL);
+      Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, bytecount, -1, NULL);
     }
   }
 

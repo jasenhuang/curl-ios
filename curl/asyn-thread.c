@@ -371,7 +371,7 @@ static void destroy_async_data (struct Curl_async *async)
  * init_resolve_thread() starts a new thread that performs the actual
  * resolve. This function returns before the resolve is done.
  *
- * Returns FALSE in case of failure, otherwise TRUE.
+ * Returns false in case of failure, otherwise true.
  */
 static bool init_resolve_thread (struct connectdata *conn,
                                  const char *hostname, int port,
@@ -385,7 +385,7 @@ static bool init_resolve_thread (struct connectdata *conn,
     goto err_exit;
 
   conn->async.port = port;
-  conn->async.done = FALSE;
+  conn->async.done = false;
   conn->async.status = 0;
   conn->async.dns = NULL;
   td->thread_hnd = curl_thread_t_null;
@@ -411,14 +411,14 @@ static bool init_resolve_thread (struct connectdata *conn,
     goto err_exit;
   }
 
-  return TRUE;
+  return true;
 
  err_exit:
   destroy_async_data(&conn->async);
 
   SET_ERRNO(err);
 
-  return FALSE;
+  return false;
 }
 
 /*
@@ -470,7 +470,7 @@ CURLcode Curl_resolver_wait_resolv(struct connectdata *conn,
   else
     DEBUGASSERT(0);
 
-  conn->async.done = TRUE;
+  conn->async.done = true;
 
   if(entry)
     *entry = conn->async.dns;

@@ -94,7 +94,7 @@ int curl_dogetnameinfo(GETNAMEINFO_QUAL_ARG1 GETNAMEINFO_TYPE_ARG1 sa,
 #endif /* defined(CURLDEBUG) && defined(HAVE_GETNAMEINFO) */
 
 /*
- * Curl_ipv6works() returns TRUE if IPv6 seems to work.
+ * Curl_ipv6works() returns true if IPv6 seems to work.
  */
 bool Curl_ipv6works(void)
 {
@@ -113,18 +113,18 @@ bool Curl_ipv6works(void)
       Curl_closesocket(NULL, s);
     }
   }
-  return (ipv6_works>0)?TRUE:FALSE;
+  return (ipv6_works>0)?true:false;
 }
 
 /*
  * Curl_ipvalid() checks what CURL_IPRESOLVE_* requirements that might've
- * been set and returns TRUE if they are OK.
+ * been set and returns true if they are OK.
  */
 bool Curl_ipvalid(struct connectdata *conn)
 {
   if(conn->ip_version == CURL_IPRESOLVE_V6)
     return Curl_ipv6works();
-  return TRUE;
+  return true;
 }
 
 #if defined(CURLRES_SYNCH)

@@ -168,7 +168,7 @@ struct http_conn {
   bool bodystarted;
   sending send_underlying; /* underlying send Curl_send callback */
   recving recv_underlying; /* underlying recv Curl_recv callback */
-  bool closed; /* TRUE on HTTP2 stream close */
+  bool closed; /* true on HTTP2 stream close */
   uint32_t error_code; /* HTTP/2 error code */
   Curl_send_buffer *header_recvbuf; /* store response headers.  We
                                        store non-final and final
@@ -202,7 +202,7 @@ CURLcode Curl_http_readwrite_headers(struct SessionHandle *data,
 /**
  * Curl_http_output_auth() setups the authentication headers for the
  * host/proxy and the correct authentication
- * method. conn->data->state.authdone is set to TRUE when authentication is
+ * method. conn->data->state.authdone is set to true when authentication is
  * done.
  *
  * @param conn all information about the current connection
@@ -217,7 +217,7 @@ CURLcode
 Curl_http_output_auth(struct connectdata *conn,
                       const char *request,
                       const char *path,
-                      bool proxytunnel); /* TRUE if this is the request setting
+                      bool proxytunnel); /* true if this is the request setting
                                             up the proxy tunnel */
 
 #endif /* HEADER_CURL_HTTP_H */

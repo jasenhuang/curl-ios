@@ -411,7 +411,7 @@ struct socketmonitor {
 
 struct events {
   long ms;              /* timeout, run the timeout function when reached */
-  bool msbump;          /* set TRUE when timeout is set by callback */
+  bool msbump;          /* set true when timeout is set by callback */
   int num_sockets;      /* number of nodes in the monitor list */
   struct socketmonitor *list; /* list of sockets to monitor */
   int running_handles;  /* store the returned number */
@@ -437,7 +437,7 @@ static int events_timer(CURLM *multi,    /* multi handle */
     timeout_ms = 1; /* trigger asap */
 
   ev->ms = timeout_ms;
-  ev->msbump = TRUE;
+  ev->msbump = true;
   return 0;
 }
 
@@ -571,7 +571,7 @@ static void events_setup(CURLM *multi, struct events *ev)
 
 static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
 {
-  bool done = FALSE;
+  bool done = false;
   CURLMcode mcode;
   CURLcode result = CURLE_OK;
 
@@ -604,7 +604,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
 
     after = curlx_tvnow();
 
-    ev->msbump = FALSE; /* reset here */
+    ev->msbump = false; /* reset here */
 
     if(0 == pollrc) {
       /* timeout! */
@@ -644,7 +644,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
     msg = curl_multi_info_read(multi, &pollrc);
     if(msg) {
       result = msg->data.result;
-      done = TRUE;
+      done = true;
     }
   }
 
@@ -658,7 +658,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
  */
 static CURLcode easy_events(CURLM *multi)
 {
-  struct events evs= {2, FALSE, 0, NULL, 0};
+  struct events evs= {2, false, 0, NULL, 0};
 
   /* if running event-based, do some further multi inits */
   events_setup(multi, &evs);
@@ -672,7 +672,7 @@ static CURLcode easy_events(CURLM *multi)
 
 static CURLcode easy_transfer(CURLM *multi)
 {
-  bool done = FALSE;
+  bool done = false;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
   struct timeval before;
@@ -684,7 +684,7 @@ static CURLcode easy_transfer(CURLM *multi)
     int ret;
 
     before = curlx_tvnow();
-    mcode = curl_multi_wait(multi, NULL, 0, 1000, &ret);
+    mcode = curl_multi_wait(multi, NULL, 0, 1000, &ret);//poll
 
     if(mcode == CURLM_OK) {
       if(ret == -1) {
@@ -721,7 +721,7 @@ static CURLcode easy_transfer(CURLM *multi)
       CURLMsg *msg = curl_multi_info_read(multi, &rc);
       if(msg) {
         result = msg->data.result;
-        done = TRUE;
+        done = true;
       }
     }
   }
@@ -752,7 +752,7 @@ static CURLcode easy_transfer(CURLM *multi)
  * function, the same multi handle must be re-used so that the same pools and
  * caches can be used.
  *
- * DEBUG: if 'events' is set TRUE, this function will use a replacement engine
+ * DEBUG: if 'events' is set true, this function will use a replacement engine
  * instead of curl_multi_perform() and use curl_multi_socket_action().
  */
 static CURLcode easy_perform(struct SessionHandle *data, bool events)
@@ -819,7 +819,7 @@ static CURLcode easy_perform(struct SessionHandle *data, bool events)
  */
 CURLcode curl_easy_perform(CURL *easy)
 {
-  return easy_perform(easy, FALSE);
+  return easy_perform(easy, false);
 }
 
 #ifdef CURLDEBUG
@@ -829,7 +829,7 @@ CURLcode curl_easy_perform(CURL *easy)
  */
 CURLcode curl_easy_perform_ev(CURL *easy)
 {
-  return easy_perform(easy, TRUE);
+  return easy_perform(easy, true);
 }
 
 #endif
@@ -930,20 +930,20 @@ CURL *curl_easy_duphandle(CURL *incurl)
     outcurl->change.url = strdup(data->change.url);
     if(!outcurl->change.url)
       goto fail;
-    outcurl->change.url_alloc = TRUE;
+    outcurl->change.url_alloc = true;
   }
 
   if(data->change.referer) {
     outcurl->change.referer = strdup(data->change.referer);
     if(!outcurl->change.referer)
       goto fail;
-    outcurl->change.referer_alloc = TRUE;
+    outcurl->change.referer_alloc = true;
   }
 
   /* Clone the resolver handle, if present, for the new handle */
-  if(Curl_resolver_duphandle(&outcurl->state.resolver,
-                             data->state.resolver))
-    goto fail;
+    if(Curl_resolver_duphandle(&outcurl->state.resolver,data->state.resolver)){
+      goto fail;
+    }
 
   Curl_convert_setup(outcurl);
 

@@ -116,7 +116,7 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
                                            GSS_C_NO_CHANNEL_BINDINGS,
                                            &input_token,
                                            &output_token,
-                                           TRUE,
+                                           true,
                                            NULL);
   Curl_safefree(input_token.value);
 

@@ -97,14 +97,14 @@ unsigned int Curl_ipv6_scope(const struct sockaddr *sa)
 
 bool Curl_if_is_interface_name(const char *interf)
 {
-  bool result = FALSE;
+  bool result = false;
 
   struct ifaddrs *iface, *head;
 
   if(getifaddrs(&head) >= 0) {
     for(iface=head; iface != NULL; iface=iface->ifa_next) {
       if(curl_strequal(iface->ifa_name, interf)) {
-        result = TRUE;
+        result = true;
         break;
       }
     }
@@ -199,7 +199,7 @@ bool Curl_if_is_interface_name(const char *interf)
   char buf[256];
 
   return (Curl_if2ip(AF_INET, 0 /* unused */, 0, interf, buf, sizeof(buf)) ==
-          IF2IP_NOT_FOUND) ? FALSE : TRUE;
+          IF2IP_NOT_FOUND) ? false : true;
 }
 
 if2ip_result_t Curl_if2ip(int af, unsigned int remote_scope,
@@ -252,7 +252,7 @@ bool Curl_if_is_interface_name(const char *interf)
 {
   (void) interf;
 
-  return FALSE;
+  return false;
 }
 
 if2ip_result_t Curl_if2ip(int af, unsigned int remote_scope,

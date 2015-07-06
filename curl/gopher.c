@@ -84,7 +84,7 @@ static CURLcode gopher_do(struct connectdata *conn, bool *done)
   char *sel_org = NULL;
   ssize_t amount, k;
 
-  *done = TRUE; /* unconditionally */
+  *done = true; /* unconditionally */
 
   /* Create selector. Degenerate cases: / and /1 => convert to "" */
   if(strlen(path) <= 2)
@@ -158,7 +158,7 @@ static CURLcode gopher_do(struct connectdata *conn, bool *done)
   if(result)
     return result;
 
-  Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, bytecount,
+  Curl_setup_transfer(conn, FIRSTSOCKET, -1, false, bytecount,
                       -1, NULL); /* no upload */
   return CURLE_OK;
 }

@@ -116,7 +116,7 @@ static const char upper_digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       done++; \
     else \
      return done; /* return immediately on failure */ \
-  } WHILE_FALSE
+  } WHILE_false
 
 /* Data type to read from the arglist */
 typedef enum  {
@@ -206,7 +206,7 @@ static bool dprintf_IsQualifierNoDollar(const char *fmt)
 {
 #if defined(MP_HAVE_INT_EXTENSIONS)
   if(!strncmp(fmt, "I32", 3) || !strncmp(fmt, "I64", 3)) {
-    return TRUE;
+    return true;
   }
 #endif
 
@@ -219,10 +219,10 @@ static bool dprintf_IsQualifierNoDollar(const char *fmt)
 #if defined(MP_HAVE_INT_EXTENSIONS)
   case 'I':
 #endif
-    return TRUE;
+    return true;
 
   default:
-    return FALSE;
+    return false;
   }
 }
 

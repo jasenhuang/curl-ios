@@ -146,8 +146,8 @@ bool Curl_ssl_false_start(void);
 #define Curl_ssl_connect_nonblocking(x,y,z) CURLE_NOT_BUILT_IN
 #define Curl_ssl_kill_session(x) Curl_nop_stmt
 #define Curl_ssl_random(x,y,z) ((void)x, CURLE_NOT_BUILT_IN)
-#define Curl_ssl_cert_status_request() FALSE
-#define Curl_ssl_false_start() FALSE
+#define Curl_ssl_cert_status_request() false
+#define Curl_ssl_false_start() false
 #endif
 
 #endif /* HEADER_CURL_VTLS_H */

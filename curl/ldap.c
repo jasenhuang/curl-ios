@@ -123,7 +123,7 @@ static void _ldap_free_urldesc (LDAPURLDesc *ludp);
   #define LDAP_TRACE(x)   do { \
                             _ldap_trace ("%u: ", __LINE__); \
                             _ldap_trace x; \
-                          } WHILE_FALSE
+                          } WHILE_false
 
   static void _ldap_trace (const char *fmt, ...);
 #else
@@ -212,7 +212,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
   char *passwd = NULL;
 #endif
 
-  *done = TRUE; /* unconditionally */
+  *done = true; /* unconditionally */
   infof(data, "LDAP local: LDAP Vendor = %s ; LDAP Version = %d\n",
           LDAP_VENDOR_NAME, LDAP_VENDOR_VERSION);
   infof(data, "LDAP local: %s\n", data->change.url);
@@ -677,7 +677,7 @@ quit:
 #endif
 
   /* no data to transfer */
-  Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+  Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
   connclose(conn, "LDAP connection always disable re-use");
 
   return result;
@@ -742,7 +742,7 @@ static bool split_str(char *str, char ***out, size_t *count)
 
   res = calloc(items, sizeof(char *));
   if(!res)
-    return FALSE;
+    return false;
 
   for(i = 0, s = strtok_r(str, ",", &lasts); s && i < items;
       s = strtok_r(NULL, ",", &lasts), i++)
@@ -751,7 +751,7 @@ static bool split_str(char *str, char ***out, size_t *count)
   *out = res;
   *count = items;
 
-  return TRUE;
+  return true;
 }
 
 /*

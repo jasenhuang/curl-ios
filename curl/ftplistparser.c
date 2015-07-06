@@ -292,7 +292,7 @@ static bool ftp_pl_gettime(struct ftp_parselist_data *parser, char *string)
    *  20100421092538 -> for MLST/MLSD response
    */
 
-  return FALSE;
+  return false;
 }
 
 static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
@@ -303,7 +303,7 @@ static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
   struct ftp_wc_tmpdata *tmpdata = wc->tmp;
   struct curl_llist *llist = wc->filelist;
   struct ftp_parselist_data *parser = tmpdata->parser;
-  bool add = TRUE;
+  bool add = true;
 
   /* move finfo pointers to b_data */
   char *str = finfo->b_data;
@@ -329,11 +329,11 @@ static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
     /* discard symlink which is containing multiple " -> " */
     if((finfo->filetype == CURLFILETYPE_SYMLINK) && finfo->strings.target &&
        (strstr(finfo->strings.target, " -> "))) {
-      add = FALSE;
+      add = false;
     }
   }
   else {
-    add = FALSE;
+    add = false;
   }
 
   if(add) {

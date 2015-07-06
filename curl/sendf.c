@@ -66,7 +66,7 @@ static size_t convert_lineends(struct SessionHandle *data,
       /* and it wasn't a bare CR but a CRLF conversion instead */
       data->state.crlf_conversions++;
     }
-    data->state.prev_block_had_trailing_cr = FALSE; /* reset the flag */
+    data->state.prev_block_had_trailing_cr = false; /* reset the flag */
   }
 
   /* find 1st CR, if any */
@@ -102,7 +102,7 @@ static size_t convert_lineends(struct SessionHandle *data,
         /* deal with a CR at the end of the buffer */
         *outPtr = '\n'; /* copy a NL instead */
         /* note that a CRLF might be split across two blocks */
-        data->state.prev_block_had_trailing_cr = TRUE;
+        data->state.prev_block_had_trailing_cr = true;
       }
       else {
         /* copy last byte */
@@ -150,7 +150,7 @@ void Curl_failf(struct SessionHandle *data, const char *fmt, ...)
 
   if(data->set.errorbuffer && !data->state.errorbuf) {
     snprintf(data->set.errorbuffer, CURL_ERROR_SIZE, "%s", data->state.buffer);
-    data->state.errorbuf = TRUE; /* wrote error string */
+    data->state.errorbuf = true; /* wrote error string */
   }
   if(data->set.verbose) {
     len = strlen(data->state.buffer);
@@ -569,7 +569,7 @@ CURLcode Curl_read(struct connectdata *conn, /* connection data */
     if(bytestocopy > 0) {
       memcpy(buf, conn->master_buffer + conn->read_pos, bytestocopy);
       conn->read_pos += bytestocopy;
-      conn->bits.stream_was_rewound = FALSE;
+      conn->bits.stream_was_rewound = false;
 
       *n = (ssize_t)bytestocopy;
       return CURLE_OK;

@@ -133,7 +133,7 @@ polarssl_connect_step1(struct connectdata *conn,
   struct SessionHandle *data = conn->data;
   struct ssl_connect_data* connssl = &conn->ssl[sockindex];
 
-  bool sni = TRUE; /* default is SNI enabled */
+  bool sni = true; /* default is SNI enabled */
   int ret = -1;
 #ifdef ENABLE_IPV6
   struct in6_addr addr;
@@ -151,7 +151,7 @@ polarssl_connect_step1(struct connectdata *conn,
     return CURLE_SSL_CONNECT_ERROR;
   }
   else if(data->set.ssl.version == CURL_SSLVERSION_SSLv3)
-    sni = FALSE; /* SSLv3 has no SNI */
+    sni = false; /* SSLv3 has no SNI */
 
 #ifdef THREADING_SUPPORT
   entropy_init_mutex(&entropy);
@@ -501,7 +501,7 @@ polarssl_connect_step3(struct connectdata *conn,
     if(old_ssl_sessionid != our_ssl_sessionid) {
       infof(data, "old SSL session ID is stale, removing\n");
       Curl_ssl_delsessionid(conn, old_ssl_sessionid);
-      incache = FALSE;
+      incache = false;
     }
   }
 
@@ -613,13 +613,13 @@ polarssl_connect_common(struct connectdata *conn,
 
   /* check if the connection has already been established */
   if(ssl_connection_complete == connssl->state) {
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
   if(ssl_connect_1 == connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -637,7 +637,7 @@ polarssl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -662,7 +662,7 @@ polarssl_connect_common(struct connectdata *conn,
       }
       else if(0 == what) {
         if(nonblocking) {
-          *done = FALSE;
+          *done = false;
           return CURLE_OK;
         }
         else {
@@ -700,10 +700,10 @@ polarssl_connect_common(struct connectdata *conn,
     connssl->state = ssl_connection_complete;
     conn->recv[sockindex] = polarssl_recv;
     conn->send[sockindex] = polarssl_send;
-    *done = TRUE;
+    *done = true;
   }
   else
-    *done = FALSE;
+    *done = false;
 
   /* Reset our connect state machine */
   connssl->connecting_state = ssl_connect_1;
@@ -716,7 +716,7 @@ Curl_polarssl_connect_nonblocking(struct connectdata *conn,
                                 int sockindex,
                                 bool *done)
 {
-  return polarssl_connect_common(conn, sockindex, TRUE, done);
+  return polarssl_connect_common(conn, sockindex, true, done);
 }
 
 
@@ -725,9 +725,9 @@ Curl_polarssl_connect(struct connectdata *conn,
                     int sockindex)
 {
   CURLcode result;
-  bool done = FALSE;
+  bool done = false;
 
-  result = polarssl_connect_common(conn, sockindex, FALSE, &done);
+  result = polarssl_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 

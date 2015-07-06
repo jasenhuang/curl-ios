@@ -186,7 +186,7 @@ static int passwd_callback(char *buf, int num, int encrypting
 }
 
 /*
- * rand_enough() is a function that returns TRUE if we have seeded the random
+ * rand_enough() is a function that returns true if we have seeded the random
  * engine properly. We use some preprocessor magic to provide a seed_enough()
  * macro to use, just to prevent a compiler warning on this function if we
  * pass in an argument that is never used.
@@ -197,14 +197,14 @@ static int passwd_callback(char *buf, int num, int encrypting
 #define seed_enough(x) rand_enough()
 static bool rand_enough(void)
 {
-  return (0 != RAND_status()) ? TRUE : FALSE;
+  return (0 != RAND_status()) ? true : false;
 }
 #else
 #define seed_enough(x) rand_enough(x)
 static bool rand_enough(int nread)
 {
   /* this is a very silly decision to make */
-  return (nread > 500) ? TRUE : FALSE;
+  return (nread > 500) ? true : false;
 }
 #endif
 
@@ -281,12 +281,12 @@ static void Curl_ossl_seed(struct SessionHandle *data)
 {
   /* we have the "SSL is seeded" boolean static to prevent multiple
      time-consuming seedings in vain */
-  static bool ssl_seeded = FALSE;
+  static bool ssl_seeded = false;
 
   if(!ssl_seeded || data->set.str[STRING_SSL_RANDOM_FILE] ||
      data->set.str[STRING_SSL_EGDSOCKET]) {
     ossl_seed(data);
-    ssl_seeded = TRUE;
+    ssl_seeded = true;
   }
 }
 #else
@@ -1073,7 +1073,7 @@ static int asn1_output(const ASN1_UTCTIME *tm,
                        size_t sizeofbuf)
 {
   const char *asn1_string;
-  int gmt=FALSE;
+  int gmt=false;
   int i;
   int year=0, month=0, day=0, hour=0, minute=0, second=0;
 
@@ -1083,7 +1083,7 @@ static int asn1_output(const ASN1_UTCTIME *tm,
   if(i < 10)
     return 1;
   if(asn1_string[i-1] == 'Z')
-    gmt=TRUE;
+    gmt= true;
   for(i=0; i<10; i++)
     if((asn1_string[i] > '9') || (asn1_string[i] < '0'))
       return 2;
@@ -1734,7 +1734,7 @@ static CURLcode ossl_connect_step1(struct connectdata *conn, int sockindex)
   case CURL_SSLVERSION_TLSv1_2:
     /* it will be handled later with the context options */
     req_method = SSLv23_client_method();
-    use_sni(TRUE);
+    use_sni(true);
     break;
   case CURL_SSLVERSION_SSLv2:
 #ifdef OPENSSL_NO_SSL2
@@ -1746,7 +1746,7 @@ static CURLcode ossl_connect_step1(struct connectdata *conn, int sockindex)
       return CURLE_SSL_CONNECT_ERROR;
 #endif
     req_method = SSLv2_client_method();
-    use_sni(FALSE);
+    use_sni(false);
     break;
 #endif
   case CURL_SSLVERSION_SSLv3:
@@ -1759,7 +1759,7 @@ static CURLcode ossl_connect_step1(struct connectdata *conn, int sockindex)
       return CURLE_SSL_CONNECT_ERROR;
 #endif
     req_method = SSLv3_client_method();
-    use_sni(FALSE);
+    use_sni(false);
     break;
 #endif
   }
@@ -2309,7 +2309,7 @@ do {                              \
       pubkey_show(data, _num, #_type, #_name, (unsigned char*)bufp, len); \
     } \
   } \
-} WHILE_FALSE
+} WHILE_false
 
 static int X509V3_ext(struct SessionHandle *data,
                       int certnum,
@@ -2633,7 +2633,7 @@ static CURLcode pkp_pin_peer_pubkey(X509* cert, const char *pinnedpubkey)
 
 /*
  * Get the server cert, verify it and show it etc, only call failf() if the
- * 'strict' argument is TRUE as otherwise all this is for informational
+ * 'strict' argument is true as otherwise all this is for informational
  * purposes only!
  *
  * We check certificates to authenticate the server; otherwise we risk
@@ -2827,7 +2827,7 @@ static CURLcode ossl_connect_step3(struct connectdata *conn, int sockindex)
     if(old_ssl_sessionid != our_ssl_sessionid) {
       infof(data, "old SSL session ID is stale, removing\n");
       Curl_ssl_delsessionid(conn, old_ssl_sessionid);
-      incache = FALSE;
+      incache = false;
     }
   }
 
@@ -2882,13 +2882,13 @@ static CURLcode ossl_connect_common(struct connectdata *conn,
 
   /* check if the connection has already been established */
   if(ssl_connection_complete == connssl->state) {
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
   if(ssl_connect_1 == connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2906,7 +2906,7 @@ static CURLcode ossl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2931,7 +2931,7 @@ static CURLcode ossl_connect_common(struct connectdata *conn,
       }
       else if(0 == what) {
         if(nonblocking) {
-          *done = FALSE;
+          *done = false;
           return CURLE_OK;
         }
         else {
@@ -2968,10 +2968,10 @@ static CURLcode ossl_connect_common(struct connectdata *conn,
     connssl->state = ssl_connection_complete;
     conn->recv[sockindex] = ossl_recv;
     conn->send[sockindex] = ossl_send;
-    *done = TRUE;
+    *done = true;
   }
   else
-    *done = FALSE;
+    *done = false;
 
   /* Reset our connect state machine */
   connssl->connecting_state = ssl_connect_1;
@@ -2983,15 +2983,15 @@ CURLcode Curl_ossl_connect_nonblocking(struct connectdata *conn,
                                        int sockindex,
                                        bool *done)
 {
-  return ossl_connect_common(conn, sockindex, TRUE, done);
+  return ossl_connect_common(conn, sockindex, true, done);
 }
 
 CURLcode Curl_ossl_connect(struct connectdata *conn, int sockindex)
 {
   CURLcode result;
-  bool done = FALSE;
+  bool done = false;
 
-  result = ossl_connect_common(conn, sockindex, FALSE, &done);
+  result = ossl_connect_common(conn, sockindex, false, &done);
   if(result)
     return result;
 
@@ -3004,9 +3004,9 @@ bool Curl_ossl_data_pending(const struct connectdata *conn, int connindex)
 {
   if(conn->ssl[connindex].handle)
     /* SSL is in use */
-    return (0 != SSL_pending(conn->ssl[connindex].handle)) ? TRUE : FALSE;
+    return (0 != SSL_pending(conn->ssl[connindex].handle)) ? true : false;
   else
-    return FALSE;
+    return false;
 }
 
 static ssize_t ossl_send(struct connectdata *conn,
@@ -3218,9 +3218,9 @@ bool Curl_ossl_cert_status_request(void)
 {
 #if (OPENSSL_VERSION_NUMBER >= 0x0090808fL) && !defined(OPENSSL_NO_TLSEXT) && \
     !defined(OPENSSL_IS_BORINGSSL)
-  return TRUE;
+  return true;
 #else
-  return FALSE;
+  return false;
 #endif
 }
 #endif /* USE_OPENSSL */

@@ -401,7 +401,7 @@ CURLcode Curl_axtls_connect_nonblocking(
   int ssl_fcn_return;
   int i;
 
- *done = FALSE;
+ *done = false;
   /* connectdata is calloc'd and connecting_state is only changed in this
      function, so this is safe, as the state is effectively initialized. */
   if(conn->ssl[sockindex].connecting_state == ssl_connect_1) {
@@ -443,7 +443,7 @@ CURLcode Curl_axtls_connect_nonblocking(
     /* Reset connect state */
     conn->ssl[sockindex].connecting_state = ssl_connect_1;
 
-    *done = TRUE;
+    *done = true;
     return CURLE_OK;
   }
 
@@ -478,7 +478,7 @@ Curl_axtls_connect(struct connectdata *conn,
   /* Check to make sure handshake was ok. */
   while(ssl_handshake_status(ssl) != SSL_OK) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, true);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -674,10 +674,10 @@ int Curl_axtls_random(struct SessionHandle *data,
                       unsigned char *entropy,
                       size_t length)
 {
-  static bool ssl_seeded = FALSE;
+  static bool ssl_seeded = false;
   (void)data;
   if(!ssl_seeded) {
-    ssl_seeded = TRUE;
+    ssl_seeded = true;
     /* Initialize the seed if not already done. This call is not exactly thread
      * safe (and neither is the ssl_seeded check), but the worst effect of a
      * race condition is that some global resources will leak. */

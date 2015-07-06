@@ -73,12 +73,12 @@
   do {                                                  \
     x->subend = x->subpointer;                          \
     CURL_SB_CLEAR(x);                                   \
-  } WHILE_FALSE
+  } WHILE_false
 #define CURL_SB_ACCUM(x,c)                                   \
   do {                                                       \
     if(x->subpointer < (x->subbuffer+sizeof x->subbuffer))   \
       *x->subpointer++ = (c);                                \
-  } WHILE_FALSE
+  } WHILE_false
 
 #define  CURL_SB_GET(x) ((*x->subpointer++)&0xff)
 #define  CURL_SB_PEEK(x)   ((*x->subpointer)&0xff)
@@ -1307,11 +1307,11 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
 #endif
   ssize_t nread;
   struct timeval now;
-  bool keepon = TRUE;
+  bool keepon = true;
   char *buf = data->state.buffer;
   struct TELNET *tn;
 
-  *done = TRUE; /* unconditionally */
+  *done = true; /* unconditionally */
 
   result = init_telnet(conn);
   if(result)
@@ -1416,7 +1416,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
 
   /* Keep on listening and act on events */
   while(keepon) {
-    waitret = WaitForMultipleObjects(obj_count, objs, FALSE, wait_timeout);
+    waitret = WaitForMultipleObjects(obj_count, objs, false, wait_timeout);
     switch(waitret) {
     case WAIT_TIMEOUT:
     {
@@ -1425,7 +1425,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
           /* read from user-supplied method */
           result = (int) conn->fread_func(buf, 1, BUFSIZE - 1, conn->fread_in);
           if(result == CURL_READFUNC_ABORT) {
-            keepon = FALSE;
+            keepon = false;
             result = CURLE_READ_ERROR;
             break;
           }
@@ -1442,7 +1442,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
           /* read from stdin */
           if(!PeekNamedPipe(stdin_handle, NULL, 0, NULL,
                             &readfile_read, NULL)) {
-            keepon = FALSE;
+            keepon = false;
             result = CURLE_READ_ERROR;
             break;
           }
@@ -1452,7 +1452,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
 
           if(!ReadFile(stdin_handle, buf, sizeof(data->state.buffer),
                        &readfile_read, NULL)) {
-            keepon = FALSE;
+            keepon = false;
             result = CURLE_READ_ERROR;
             break;
           }
@@ -1460,7 +1460,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
 
         result = send_telnet_data(conn, buf, readfile_read);
         if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
       }
@@ -1471,14 +1471,14 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
     {
       if(!ReadFile(stdin_handle, buf, sizeof(data->state.buffer),
                    &readfile_read, NULL)) {
-        keepon = FALSE;
+        keepon = false;
         result = CURLE_READ_ERROR;
         break;
       }
 
       result = send_telnet_data(conn, buf, readfile_read);
       if(result) {
-        keepon = FALSE;
+        keepon = false;
         break;
       }
     }
@@ -1490,7 +1490,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
       if(SOCKET_ERROR == enum_netevents_func(sockfd, event_handle, &events)) {
         if((err = SOCKERRNO) != EINPROGRESS) {
           infof(data, "WSAEnumNetworkEvents failed (%d)", err);
-          keepon = FALSE;
+          keepon = false;
           result = CURLE_READ_ERROR;
         }
         break;
@@ -1503,19 +1503,19 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
           break;
         /* returned not-zero, this an error */
         else if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
         /* returned zero but actually received 0 or less here,
            the server closed the connection and we bail out */
         else if(nread <= 0) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
 
         result = telrcv(conn, (unsigned char *) buf, nread);
         if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
 
@@ -1528,7 +1528,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
         }
       }
       if(events.lNetworkEvents & FD_CLOSE) {
-        keepon = FALSE;
+        keepon = false;
       }
       break;
 
@@ -1539,7 +1539,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
       if(Curl_tvdiff(now, conn->created) >= data->set.timeout) {
         failf(data, "Time-out");
         result = CURLE_OPERATION_TIMEDOUT;
-        keepon = FALSE;
+        keepon = false;
       }
     }
   }
@@ -1577,7 +1577,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
   while(keepon) {
     switch (Curl_poll(pfd, poll_cnt, interval_ms)) {
     case -1:                    /* error, stop reading */
-      keepon = FALSE;
+      keepon = false;
       continue;
     case 0:                     /* timeout */
       pfd[0].revents = 0;
@@ -1592,13 +1592,13 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
           break;
         /* returned not-zero, this an error */
         else if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
         /* returned zero but actually received 0 or less here,
            the server closed the connection and we bail out */
         else if(nread <= 0) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
 
@@ -1606,7 +1606,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
         Curl_pgrsSetDownloadCounter(data, total_dl);
         result = telrcv(conn, (unsigned char *)buf, nread);
         if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
 
@@ -1629,7 +1629,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
         /* read from user-supplied method */
         nread = (int)conn->fread_func(buf, 1, BUFSIZE - 1, conn->fread_in);
         if(nread == CURL_READFUNC_ABORT) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
         if(nread == CURL_READFUNC_PAUSE)
@@ -1639,14 +1639,14 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
       if(nread > 0) {
         result = send_telnet_data(conn, buf, nread);
         if(result) {
-          keepon = FALSE;
+          keepon = false;
           break;
         }
         total_ul += nread;
         Curl_pgrsSetUploadCounter(data, total_ul);
       }
       else if(nread < 0)
-        keepon = FALSE;
+        keepon = false;
 
       break;
     } /* poll switch statement */
@@ -1656,7 +1656,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
       if(Curl_tvdiff(now, conn->created) >= data->set.timeout) {
         failf(data, "Time-out");
         result = CURLE_OPERATION_TIMEDOUT;
-        keepon = FALSE;
+        keepon = false;
       }
     }
 
@@ -1667,7 +1667,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
   }
 #endif
   /* mark this as "no further transfer wanted" */
-  Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+  Curl_setup_transfer(conn, -1, -1, false, NULL, -1, NULL);
 
   return result;
 }

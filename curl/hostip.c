@@ -572,7 +572,7 @@ int Curl_resolv_timeout(struct connectdata *conn,
 #ifdef USE_ALARM_TIMEOUT
 #ifdef HAVE_SIGACTION
   struct sigaction keep_sigact;   /* store the old struct here */
-  volatile bool keep_copysig = FALSE; /* wether old sigact has been saved */
+  volatile bool keep_copysig = false; /* wether old sigact has been saved */
   struct sigaction sigact;
 #else
 #ifdef HAVE_SIGNAL
@@ -627,7 +627,7 @@ int Curl_resolv_timeout(struct connectdata *conn,
 #ifdef HAVE_SIGACTION
     sigaction(SIGALRM, NULL, &sigact);
     keep_sigact = sigact;
-    keep_copysig = TRUE; /* yes, we have a copy */
+    keep_copysig = true; /* yes, we have a copy */
     sigact.sa_handler = alarmfunc;
 #ifdef SA_RESTART
     /* HPUX doesn't have SA_RESTART but defaults to that behaviour! */

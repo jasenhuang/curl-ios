@@ -104,18 +104,18 @@ CURLcode Curl_socket(struct connectdata *conn,
 
 #ifdef CURLDEBUG
 /*
- * Curl_connclose() sets the bit.close bit to TRUE with an explanation.
+ * Curl_connclose() sets the bit.close bit to true with an explanation.
  * Nothing else.
  */
 void Curl_conncontrol(struct connectdata *conn,
                       bool closeit,
                       const char *reason);
-#define connclose(x,y) Curl_conncontrol(x,TRUE, y)
-#define connkeep(x,y) Curl_conncontrol(x, FALSE, y)
+#define connclose(x,y) Curl_conncontrol(x,true, y)
+#define connkeep(x,y) Curl_conncontrol(x, false, y)
 #else /* if !CURLDEBUG */
 
-#define connclose(x,y) (x)->bits.close = TRUE
-#define connkeep(x,y) (x)->bits.close = FALSE
+#define connclose(x,y) (x)->bits.close = true
+#define connkeep(x,y) (x)->bits.close = false
 
 #endif
 

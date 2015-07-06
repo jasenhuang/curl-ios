@@ -64,7 +64,7 @@ int polarsslthreadlock_thread_setup(void)
   }
 #elif defined(HAVE_PROCESS_H)
   for(i = 0;  i < NUMT;  i++) {
-    mutex_buf[i] = CreateMutex(0, FALSE, 0);
+    mutex_buf[i] = CreateMutex(0, false, 0);
     if(mutex_buf[i] == 0)
       return 0;  /* CreateMutex failed */
   }

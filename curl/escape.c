@@ -57,11 +57,11 @@ static bool Curl_isunreserved(unsigned char in)
     case 'P': case 'Q': case 'R': case 'S': case 'T':
     case 'U': case 'V': case 'W': case 'X': case 'Y': case 'Z':
     case '-': case '.': case '_': case '~':
-      return TRUE;
+      return true;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 /* for ABI-compatibility with previous versions */
@@ -214,7 +214,7 @@ char *curl_easy_unescape(CURL *handle, const char *string, int length,
   size_t inputlen = length;
   size_t outputlen;
   CURLcode res = Curl_urldecode(handle, string, inputlen, &str, &outputlen,
-                                FALSE);
+                                false);
   if(res)
     return NULL;
   if(olen)

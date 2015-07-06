@@ -205,14 +205,14 @@ static int checkday(const char *check, size_t len)
 {
   int i;
   const char * const *what;
-  bool found= FALSE;
+  bool found= false;
   if(len > 3)
     what = &weekday[0];
   else
     what = &Curl_wkday[0];
   for(i=0; i<7; i++) {
     if(Curl_raw_equal(check, what[0])) {
-      found=TRUE;
+      found= true;
       break;
     }
     what++;
@@ -224,12 +224,12 @@ static int checkmonth(const char *check)
 {
   int i;
   const char * const *what;
-  bool found= FALSE;
+  bool found= false;
 
   what = &Curl_month[0];
   for(i=0; i<12; i++) {
     if(Curl_raw_equal(check, what[0])) {
-      found=TRUE;
+      found= true;
       break;
     }
     what++;
@@ -244,12 +244,12 @@ static int checktz(const char *check)
 {
   unsigned int i;
   const struct tzinfo *what;
-  bool found= FALSE;
+  bool found= false;
 
   what = tz;
   for(i=0; i< sizeof(tz)/sizeof(tz[0]); i++) {
     if(Curl_raw_equal(check, what->name)) {
-      found=TRUE;
+      found= true;
       break;
     }
     what++;
@@ -345,7 +345,7 @@ static int parsedate(const char *date, time_t *output)
   int part = 0; /* max 6 parts */
 
   while(*date && (part < 6)) {
-    bool found=FALSE;
+    bool found=false;
 
     skip(&date);
 
@@ -362,19 +362,19 @@ static int parsedate(const char *date, time_t *output)
       if(wdaynum == -1) {
         wdaynum = checkday(buf, len);
         if(wdaynum != -1)
-          found = TRUE;
+          found = true;
       }
       if(!found && (monnum == -1)) {
         monnum = checkmonth(buf);
         if(monnum != -1)
-          found = TRUE;
+          found = true;
       }
 
       if(!found && (tzoff == -1)) {
         /* this just must be a time zone string */
         tzoff = checktz(buf);
         if(tzoff != -1)
-          found = TRUE;
+          found = true;
       }
 
       if(!found)
@@ -432,7 +432,7 @@ static int parsedate(const char *date, time_t *output)
              Functions" at http://david.tribble.com/text/c0xtimezone.html If
              anyone has a more authoritative source for the exact maximum time
              zone offsets, please speak up! */
-          found = TRUE;
+          found = true;
           tzoff = (val/100 * 60 + val%100)*60;
 
           /* the + and - prefix indicates the local time compared to GMT,
@@ -445,7 +445,7 @@ static int parsedate(const char *date, time_t *output)
            (monnum == -1) &&
            (mdaynum == -1)) {
           /* 8 digits, no year, month or day yet. This is YYYYMMDD */
-          found = TRUE;
+          found = true;
           yearnum = val/10000;
           monnum = (val%10000)/100-1; /* month is 0 - 11 */
           mdaynum = val%100;
@@ -454,14 +454,14 @@ static int parsedate(const char *date, time_t *output)
         if(!found && (dignext == DATE_MDAY) && (mdaynum == -1)) {
           if((val > 0) && (val<32)) {
             mdaynum = val;
-            found = TRUE;
+            found = true;
           }
           dignext = DATE_YEAR;
         }
 
         if(!found && (dignext == DATE_YEAR) && (yearnum == -1)) {
           yearnum = val;
-          found = TRUE;
+          found = true;
           if(yearnum < 1900) {
             if(yearnum > 70)
               yearnum += 1900;

@@ -496,7 +496,7 @@ CURLcode Curl_sasl_create_ntlm_type3_message(struct SessionHandle *data,
   unsigned char *ptr_ntresp = &ntresp[0];
   unsigned char *ntlmv2resp = NULL;
 #endif
-  bool unicode = (ntlm->flags & NTLMFLAG_NEGOTIATE_UNICODE) ? TRUE : FALSE;
+  bool unicode = (ntlm->flags & NTLMFLAG_NEGOTIATE_UNICODE) ? true : false;
   char host[HOSTNAME_MAX + 1] = "";
   const char *user;
   const char *domain = "";

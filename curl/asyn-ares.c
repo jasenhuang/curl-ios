@@ -358,7 +358,7 @@ CURLcode Curl_resolver_wait_resolv(struct connectdata *conn,
   struct timeval now = Curl_tvnow();
   struct Curl_dns_entry *temp_entry;
 
-  timeout = Curl_timeleft(data, &now, TRUE);
+  timeout = Curl_timeleft(data, &now, true);
   if(!timeout)
     timeout = CURL_TIMEOUT_RESOLVE * 1000; /* default name resolve timeout */
 
@@ -536,7 +536,7 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
     free(conn->async.hostname);
     conn->async.hostname = bufp;
     conn->async.port = port;
-    conn->async.done = FALSE;   /* not done */
+    conn->async.done = false;   /* not done */
     conn->async.status = 0;     /* clear */
     conn->async.dns = NULL;     /* clear */
     res = calloc(sizeof(struct ResolverResults), 1);

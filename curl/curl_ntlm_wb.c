@@ -360,7 +360,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
     ntlm = &conn->ntlm;
     authp = &conn->data->state.authhost;
   }
-  authp->done = FALSE;
+  authp->done = false;
 
   /* not set means empty */
   if(!userp)
@@ -413,7 +413,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
                             conn->response_header);
     DEBUG_OUT(fprintf(stderr, "**** %s\n ", *allocuserpwd));
     ntlm->state = NTLMSTATE_TYPE3; /* we sent a type-3 */
-    authp->done = TRUE;
+    authp->done = true;
     Curl_ntlm_wb_cleanup(conn);
     break;
   case NTLMSTATE_TYPE3:
@@ -421,7 +421,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
      * don't send a header in future requests */
     free(*allocuserpwd);
     *allocuserpwd=NULL;
-    authp->done = TRUE;
+    authp->done = true;
     break;
   }
 
