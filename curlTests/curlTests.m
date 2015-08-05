@@ -14,15 +14,10 @@
 
 @end
 static const char *urls[] = {
-    "http://www.baidu.com",
     "http://www.qq.com",
     "http://www.mail.qq.com",
 };
-static int SocketCallback(CURL* e, curl_socket_t fd, int action, void* cbp, void* sockp)
-{
-    printf("xxxxxxxx\n");
-    return 0;
-}
+
 static void init(CURLM *cm, int i)
 {
     CURL *eh = curl_easy_init();
@@ -59,9 +54,8 @@ static void init(CURLM *cm, int i)
     
     curl_global_init(CURL_GLOBAL_ALL);
     cm = curl_multi_init();
-    curl_multi_setopt(cm, CURLMOPT_SOCKETFUNCTION, SocketCallback) ;
     
-    for (C = 0; C < 3; ++C) {
+    for (C = 0; C < 1; ++C) {
         init(cm, C);
     }
     
@@ -96,20 +90,19 @@ static void init(CURLM *cm, int i)
                             M+1, L, errno, strerror(errno));
                     return;
                 }
-            }
-        }
-        
-        while ((msg = curl_multi_info_read(cm, &Q))) {
-            if (msg->msg == CURLMSG_DONE) {
-                char *url;
-                CURL *e = msg->easy_handle;
-                curl_easy_getinfo(msg->easy_handle, CURLINFO_PRIVATE, &url);
-                fprintf(stderr, "R: %d - %s <%s>\n",msg->data.result, curl_easy_strerror(msg->data.result), url);
-                curl_multi_remove_handle(cm, e);
-                curl_easy_cleanup(e);
-            }
-            else {
-                fprintf(stderr, "E: CURLMsg (%d)\n", msg->msg);
+                while ((msg = curl_multi_info_read(cm, &Q))) {
+                    if (msg->msg == CURLMSG_DONE) {
+                        char *url;
+                        CURL *e = msg->easy_handle;
+                        curl_easy_getinfo(msg->easy_handle, CURLINFO_PRIVATE, &url);
+                        fprintf(stderr, "R: %d - %s <%s>\n",msg->data.result, curl_easy_strerror(msg->data.result), url);
+                        curl_multi_remove_handle(cm, e);
+                        curl_easy_cleanup(e);
+                    }
+                    else {
+                        fprintf(stderr, "E: CURLMsg (%d)\n", msg->msg);
+                    }
+                }
             }
         }
     }
